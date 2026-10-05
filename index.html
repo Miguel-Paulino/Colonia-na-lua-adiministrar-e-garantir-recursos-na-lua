@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Possible One: Lunar Industries</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="game-container">
+        <!-- TELA INICIAL -->
+        <div id="start-screen" class="screen">
+            <h1>POSSIBLE ONE</h1>
+            <h2>Lunar Industries Manager</h2>
+            <p class="subtitle">Gerencie recursos, enfrente a crise e decida o destino da colônia na Cratera Shackleton.</p>
+            <button id="start-btn" class="btn">Iniciar Missão</button>
+        </div>
+
+        <!-- TELA DO JOGO -->
+        <div id="game-screen" class="screen hidden">
+            <!-- Barra de Recursos -->
+            <div id="resources-bar">
+                <div class="resource">🔋 Energia: <span id="res-energy">100</span>%</div>
+                <div class="resource">🍏 Oxigênio/Comida: <span id="res-supplies">30</span> dias</div>
+                <div class="resource">📈 Meta Corporativa: <span id="res-corporate">50</span>%</div>
+            </div>
+
+            <!-- Painel de História e Opções -->
+            <div id="story-panel">
+                <p id="story-text">Carregando dados da colônia...</p>
+            </div>
+
+            <div id="choices-panel">
+                <!-- Os botões de escolha serão gerados dinamicamente via JS -->
+            </div>
+        </div>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>
