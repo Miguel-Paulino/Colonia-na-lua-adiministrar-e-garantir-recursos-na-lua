@@ -2,7 +2,9 @@
 const gameState = {
     energy: 100,
     supplies: 30,
-    corporate: 50
+    corporate: 50,
+    experience: 0,
+    level: 1
 };
 
 // Elementos da Interface
@@ -16,6 +18,25 @@ const choicesPanel = document.getElementById('choices-panel');
 const resEnergy = document.getElementById('res-energy');
 const resSupplies = document.getElementById('res-supplies');
 const resCorporate = document.getElementById('res-corporate');
+const energyBar = document.getElementById('energy-bar');
+const suppliesBar = document.getElementById('supplies-bar');
+const influenceBar = document.getElementById('influence-bar');
+const playerLevel = document.getElementById('player-level');
+const playerXp = document.getElementById('player-xp');
+const xpBar = document.getElementById('xp-bar');
+const xpTrack = document.querySelector('.xp-track');
+const questTitle = document.getElementById('quest-title');
+const questDescription = document.getElementById('quest-description');
+
+const questDetails = {
+    intro: ['Sinal de socorro', 'Decida como salvar a colônia da crise de abastecimento.'],
+    routeCorporate: ['O preço do progresso', 'Atenda à Lunar Industries ou proteja sua tripulação.'],
+    routeIndependence: ['Raízes na Lua', 'Garanta o futuro de uma colônia sem apoio da Terra.'],
+    routeDisaster: ['Noite sem energia', 'Encontre uma saída antes que os geradores parem.'],
+    finalCorporate: ['Uma vitória amarga', 'Seu caminho levou a colônia ao resgate corporativo.'],
+    finalIndependence: ['Um novo mundo', 'A colônia conquistou seu lugar entre as estrelas.'],
+    finalDisaster: ['Silêncio lunar', 'A Lua guardará para sempre o fim da expedição.']
+};
 
 // Banco de Dados da História (Nós do Jogo)
 const storyNodes = {
@@ -95,9 +116,18 @@ function updateUI() {
     resSupplies.textContent = gameState.supplies;
     resCorporate.textContent = gameState.corporate;
 
-    // Alertas visuais se os recursos estiverem baixos
-    resEnergy.style.color = gameState.energy < 30 ? "var(--danger-color)" : "var(--accent-color)";
-    resSupplies.style.color = gameState.supplies < 15 ? "var(--danger-color)" : "var(--accent-color)";
+    energyBar.style.width = `${gameState.energy}%`;
+    suppliesBar.style.width = `${Math.min(gameState.supplies / 30 * 100, 100)}%`;
+    influenceBar.style.width = `${Math.min(gameState.corporate, 100)}%`;
+    energyBar.classList.toggle('low', gameState.energy < 30);
+    suppliesBar.classList.toggle('low', gameState.supplies < 15);
+
+    const experienceToNextLevel = 100 + (gameState.level - 1) * 50;
+    playerLevel.textContent = gameState.level;
+    playerXp.textContent = gameState.experience;
+    xpBar.style.width = `${gameState.experience / experienceToNextLevel * 100}%`;
+    xpTrack.setAttribute('aria-valuemax', experienceToNextLevel);
+    xpTrack.setAttribute('aria-valuenow', gameState.experience);
 }
 
 // Controla a transição e exibição do texto da história
@@ -106,17 +136,35 @@ function goToNode(nodeKey) {
         gameState.energy = 100;
         gameState.supplies = 30;
         gameState.corporate = 50;
+        gameState.experience = 0;
+        gameState.level = 1;
         nodeKey = "intro";
     }
 
     const node = storyNodes[nodeKey];
+    const [currentQuest, currentObjective] = questDetails[nodeKey];
+    questTitle.textContent = currentQuest;
+    questDescription.textContent = currentObjective;
     storyText.textContent = node.text;
     choicesPanel.innerHTML = ""; // Limpa escolhas anteriores
 
-    node.choices.forEach(choice => {
+    node.choices.forEach((choice, index) => {
         const button = document.createElement('button');
-        button.textContent = choice.text;
         button.classList.add('btn', 'choice-btn');
+        const number = document.createElement('span');
+        number.classList.add('choice-number');
+        number.textContent = `0${index + 1}`;
+
+        const copy = document.createElement('span');
+        copy.classList.add('choice-copy');
+        copy.textContent = choice.text;
+
+        const arrow = document.createElement('span');
+        arrow.classList.add('choice-arrow');
+        arrow.setAttribute('aria-hidden', 'true');
+        arrow.textContent = '↗';
+
+        button.append(number, copy, arrow);
        
         button.addEventListener('click', () => {
             // Aplica os efeitos nos recursos (se houver)
@@ -124,10 +172,16 @@ function goToNode(nodeKey) {
                 gameState.energy = Math.max(0, gameState.energy + (choice.effects.energy || 0));
                 gameState.supplies = Math.max(0, gameState.supplies + (choice.effects.supplies || 0));
                 gameState.corporate = Math.max(0, gameState.corporate + (choice.effects.corporate || 0));
+                gameState.experience += 35;
+
+                let experienceToNextLevel = 100 + (gameState.level - 1) * 50;
+                while (gameState.experience >= experienceToNextLevel) {
+                    gameState.experience -= experienceToNextLevel;
+                    gameState.level += 1;
+                    experienceToNextLevel = 100 + (gameState.level - 1) * 50;
+                }
             }
            
-            updateUI();
-
             // Checa condições críticas antes de ir para o próximo nó
             if (gameState.energy <= 0 || gameState.supplies <= 0) {
                 goToNode("finalDisaster");
@@ -137,12 +191,12 @@ function goToNode(nodeKey) {
         });
         choicesPanel.appendChild(button);
     });
+    updateUI();
 }
 
 // Iniciar Jogo
 startBtn.addEventListener('click', () => {
-    startScreen.classList.add('hidden');
-    gameScreen.classList.remove('hidden');
-    updateUI();
-    goToNode('intro');
+startScreen.classList.add('hidden');
+gameScreen.classList.remove('hidden');
+goToNode('intro');
 });

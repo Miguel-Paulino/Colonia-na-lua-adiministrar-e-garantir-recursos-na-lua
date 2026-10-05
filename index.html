@@ -3,35 +3,86 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Possible One: Lunar Industries</title>
+    <meta name="theme-color" content="#10151b">
+    <title>Possible One: Crônicas da Lua</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div id="game-container">
-        <!-- TELA INICIAL -->
         <div id="start-screen" class="screen">
+            <div class="title-mark" aria-hidden="true">✦</div>
+            <p class="eyebrow">UMA AVENTURA NARRATIVA</p>
             <h1>POSSIBLE ONE</h1>
-            <h2>Lunar Industries Manager</h2>
-            <p class="subtitle">Gerencie recursos, enfrente a crise e decida o destino da colônia na Cratera Shackleton.</p>
-            <button id="start-btn" class="btn">Iniciar Missão</button>
+            <h2>Crônicas da Lua</h2>
+            <p class="subtitle">A Cratera Shackleton está à beira do colapso. Assuma o comando, reúna sua tripulação e escreva o futuro da colônia lunar.</p>
+            <button id="start-btn" class="btn">Iniciar aventura <span aria-hidden="true">→</span></button>
+            <p class="start-note">SUAS ESCOLHAS DECIDEM O DESTINO DA COLÔNIA</p>
         </div>
 
-        <!-- TELA DO JOGO -->
         <div id="game-screen" class="screen hidden">
-            <!-- Barra de Recursos -->
-            <div id="resources-bar">
-                <div class="resource">🔋 Energia: <span id="res-energy">100</span>%</div>
-                <div class="resource">🍏 Oxigênio/Comida: <span id="res-supplies">30</span> dias</div>
-                <div class="resource">📈 Meta Corporativa: <span id="res-corporate">50</span>%</div>
-            </div>
+            <header class="game-header">
+                <a class="wordmark" href="#" aria-label="Possible One">P<span>·</span>O</a>
+                <p class="location"><span class="status-dot"></span> CRATERA SHACKLETON <span class="location-divider">/</span> LUA</p>
+                <p class="chapter-label">DIÁRIO DE BORDO <span>·</span> 01</p>
+            </header>
 
-            <!-- Painel de História e Opções -->
-            <div id="story-panel">
-                <p id="story-text">Carregando dados da colônia...</p>
-            </div>
+            <div class="game-layout">
+                <aside class="character-panel" aria-label="Ficha do comandante">
+                    <div class="portrait" aria-hidden="true">
+                        <span class="portrait-glow"></span>
+                        <span class="portrait-figure">♙</span>
+                        <span class="portrait-star">✦</span>
+                    </div>
+                    <p class="eyebrow">COMANDANTE</p>
+                    <h2 class="character-name">Pioneiro lunar</h2>
+                    <p class="character-class">Explorador da fronteira</p>
 
-            <div id="choices-panel">
-                <!-- Os botões de escolha serão gerados dinamicamente via JS -->
+                    <div class="level-row">
+                        <span>NÍVEL <strong id="player-level">1</strong></span>
+                        <span><strong id="player-xp">0</strong> XP</span>
+                    </div>
+                    <div class="xp-track" role="progressbar" aria-label="Experiência" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+                        <span id="xp-bar"></span>
+                    </div>
+
+                    <div class="panel-divider"></div>
+                    <p class="section-label">RECURSOS DA COLÔNIA</p>
+                    <div id="resources-bar">
+                        <div class="resource">
+                            <div class="resource-heading"><span>Energia</span><span><span id="res-energy">100</span>%</span></div>
+                            <div class="resource-track"><span id="energy-bar"></span></div>
+                        </div>
+                        <div class="resource">
+                            <div class="resource-heading"><span>Suprimentos</span><span><span id="res-supplies">30</span> dias</span></div>
+                            <div class="resource-track"><span id="supplies-bar"></span></div>
+                        </div>
+                        <div class="resource">
+                            <div class="resource-heading"><span>Influência</span><span><span id="res-corporate">50</span>%</span></div>
+                            <div class="resource-track"><span id="influence-bar"></span></div>
+                        </div>
+                    </div>
+
+                    <div class="panel-divider"></div>
+                    <p class="section-label">MISSÃO ATUAL</p>
+                    <p id="quest-title" class="quest-title">Sinal de socorro</p>
+                    <p id="quest-description" class="quest-description">Decida como salvar a colônia da crise de abastecimento.</p>
+                </aside>
+
+                <main class="story-column">
+                    <div class="story-heading">
+                        <p class="eyebrow">CAPÍTULO I <span>·</span> A ÚLTIMA FRONTEIRA</p>
+                        <span class="story-icon" aria-hidden="true">☾</span>
+                    </div>
+                    <div id="story-panel">
+                        <p id="story-text">Carregando dados da colônia...</p>
+                    </div>
+                    <div class="decision-heading">
+                        <span class="section-label">O QUE VOCÊ VAI FAZER?</span>
+                        <span class="decision-hint">ESCOLHA SEU CAMINHO</span>
+                    </div>
+                    <div id="choices-panel"></div>
+                    <p class="story-footer"><span>✦</span> Cada decisão molda o destino de Possible One.</p>
+                </main>
             </div>
         </div>
     </div>
