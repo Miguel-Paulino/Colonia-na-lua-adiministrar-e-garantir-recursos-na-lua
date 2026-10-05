@@ -14,7 +14,7 @@
             <p class="eyebrow">UMA AVENTURA NARRATIVA</p>
             <h1>POSSIBLE ONE</h1>
             <h2>Crônicas da Lua</h2>
-            <p class="subtitle">A Cratera Shackleton está à beira do colapso. Assuma o comando, reúna sua tripulação e escreva o futuro da colônia lunar.</p>
+            <p class="subtitle">Explore a Lua em 2D, tome decisões e descubra vários destinos possíveis para a colônia antes que a Cratera Shackleton entre em colapso.</p>
             <button id="start-btn" class="btn">Iniciar aventura <span aria-hidden="true">→</span></button>
             <p class="start-note">SUAS ESCOLHAS DECIDEM O DESTINO DA COLÔNIA</p>
         </div>
@@ -74,6 +74,27 @@
                         <p class="eyebrow">CAPÍTULO I <span>·</span> A ÚLTIMA FRONTEIRA</p>
                         <span class="story-icon" aria-hidden="true">☾</span>
                     </div>
+                    <section class="exploration-panel" aria-label="Mapa 2D explorável">
+                        <div class="exploration-heading">
+                            <span class="section-label">EXPLORAÇÃO 2D</span>
+                            <span class="exploration-controls">MOVER: WASD / ← ↑ → ↓ <span>·</span> INTERAGIR: E</span>
+                        </div>
+                        <canvas id="world-map" width="720" height="300" tabindex="0" aria-label="Mapa lunar 2D. Use as setas ou WASD para mover o explorador; pressione E perto de um ponto para investigar.">
+                            Seu navegador não suporta o mapa 2D. Continue a aventura pelas escolhas narrativas.
+                        </canvas>
+                        <div class="map-footer">
+                            <p id="map-message" aria-live="polite">Explore o mapa e aproxime-se dos marcadores para investigar.</p>
+                            <div class="map-actions">
+                                <div class="movement-pad" aria-label="Controles de movimento">
+                                    <button type="button" class="move-btn move-up" data-move="up" aria-label="Mover para cima">↑</button>
+                                    <button type="button" class="move-btn move-left" data-move="left" aria-label="Mover para a esquerda">←</button>
+                                    <button type="button" class="move-btn move-down" data-move="down" aria-label="Mover para baixo">↓</button>
+                                    <button type="button" class="move-btn move-right" data-move="right" aria-label="Mover para a direita">→</button>
+                                </div>
+                                <button type="button" id="interact-btn" class="interact-btn">Investigar <span> E </span></button>
+                            </div>
+                        </div>
+                    </section>
                     <div id="story-panel">
                         <p id="story-text">Carregando dados da colônia...</p>
                     </div>
