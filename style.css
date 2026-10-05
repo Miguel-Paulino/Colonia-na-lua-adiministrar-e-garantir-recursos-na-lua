@@ -226,6 +226,14 @@ body {
 
 .level-row strong { color: var(--accent-color); }
 
+.level-perk {
+    margin: 9px 0 0;
+    color: var(--muted-color);
+    font-family: Arial, sans-serif;
+    font-size: 0.66rem;
+    line-height: 1.5;
+}
+
 .xp-track,
 .resource-track {
     overflow: hidden;
@@ -332,6 +340,16 @@ body {
 .choice-copy { flex: 1; line-height: 1.5; }
 .choice-arrow { color: var(--muted-color); font-size: 1.1rem; }
 .choice-btn:hover .choice-arrow { color: var(--accent-hover); }
+.choice-btn:disabled {
+    transform: none;
+    border-color: rgba(143, 150, 151, 0.25);
+    background: rgba(143, 150, 151, 0.04);
+    color: #828786;
+    cursor: not-allowed;
+}
+
+.choice-btn:disabled .choice-number,
+.choice-btn:disabled .choice-arrow { color: #777e7f; }
 
 .story-footer {
     margin: 24px 0 0;
