@@ -3,132 +3,114 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta
-      name="description"
-      content="Administre uma colônia lunar, cuide da tripulação e construa um futuro entre as estrelas."
-    />
-    <meta name="theme-color" content="#080d18" />
-    <title>Horizonte Lunar — Colônia na Lua</title>
+    <meta name="theme-color" content="#090d16" />
+    <meta name="description" content="Construa uma colônia na Lua. Cuide da tripulação, explore e escolha como chegar ao futuro." />
+    <title>MARÉ LUNAR — Uma nova casa começa aqui</title>
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <main id="game-container" aria-label="Simulação 3D da colônia lunar"></main>
+    <main id="game-container" aria-label="Terreno lunar em 3D">
+      <div class="scene-caption"><span class="caption-dot"></span> POLO SUL · CRATERA SHACKLETON</div>
+      <div class="scene-controls">ARRASTE PARA GIRAR <i>·</i> RODA PARA APROXIMAR</div>
+    </main>
 
-    <header id="topbar">
-      <section class="level-card glass" aria-label="Progresso da colônia">
-        <div class="brand-mark" aria-hidden="true">H</div>
-        <div class="level-copy">
-          <span class="eyebrow">PROJETO HORIZONTE</span>
-          <strong id="level-num">NÍVEL 1</strong>
-          <span id="level-name">Módulo de Pouso</span>
-          <div id="level-bar" role="progressbar" aria-label="Progresso para a Cidade Horizonte" aria-valuemin="0" aria-valuemax="100">
-            <div id="level-fill"></div>
-          </div>
-        </div>
-      </section>
-
-      <section id="resources" class="glass" aria-label="Recursos da colônia">
-        <span class="res" title="Energia"><span aria-hidden="true">⚡</span><b id="r-energy">0</b><small>ENERGIA</small></span>
-        <span class="res" title="Oxigênio"><span aria-hidden="true">🫧</span><b id="r-oxygen">0</b><small>OXIGÊNIO</small></span>
-        <span class="res" title="Água"><span aria-hidden="true">💧</span><b id="r-water">0</b><small>ÁGUA</small></span>
-        <span class="res" title="Minérios"><span aria-hidden="true">⛏️</span><b id="r-minerals">0</b><small>MINÉRIOS</small></span>
-        <span class="res" title="Ciência"><span aria-hidden="true">🔬</span><b id="r-science">0</b><small>CIÊNCIA</small></span>
-        <span class="res" title="Créditos"><span aria-hidden="true">💰</span><b id="r-credits">0</b><small>CRÉDITOS</small></span>
-        <span class="res" title="Reputação"><span aria-hidden="true">🤝</span><b id="r-reputation">0</b><small>REPUTAÇÃO</small></span>
-      </section>
-
-      <nav class="top-actions" aria-label="Ações do jogo">
-        <button id="help-btn" class="icon-button glass" type="button" aria-label="Como jogar" title="Como jogar">?</button>
-        <button id="restart-btn" class="icon-button glass" type="button" aria-label="Reiniciar jogo" title="Reiniciar jogo">↻</button>
-      </nav>
+    <header class="topbar">
+      <a class="brand" href="#" aria-label="Maré Lunar">
+        <span class="brand-icon">M</span>
+        <span class="brand-name">MARÉ <b>LUNAR</b><small>MISSÃO DE COLONIZAÇÃO</small></span>
+      </a>
+      <div class="mission-status">
+        <span class="status-live"><i></i> MISSÃO ATIVA</span>
+        <span class="status-divider"></span>
+        <span id="mission-day">DIA 01</span>
+      </div>
+      <div class="top-buttons">
+        <button id="pause-button" class="round-button" type="button" aria-label="Pausar jogo" title="Pausar">Ⅱ</button>
+        <button id="help-button" class="round-button" type="button" aria-label="Instruções" title="Instruções">?</button>
+        <button id="restart-button" class="round-button" type="button" aria-label="Recomeçar missão" title="Recomeçar">↻</button>
+      </div>
     </header>
 
-    <aside id="crew-panel" class="panel glass">
-      <div class="panel-heading">
-        <div>
-          <span class="eyebrow">ESPECIALISTAS</span>
-          <h2>Tripulação</h2>
-        </div>
-        <span class="crew-count">04</span>
-      </div>
-      <p class="hint">Selecione um módulo e designe um especialista para aumentar sua produção.</p>
-      <div id="crew-list"></div>
-    </aside>
-
-    <aside id="right-panel">
-      <section class="panel glass">
-        <div class="panel-heading">
-          <div>
-            <span class="eyebrow">ESCOLHA SEU CAMINHO</span>
-            <h2>Rotas de expansão</h2>
-          </div>
-          <span class="signal-dot" aria-label="Sistema ativo"></span>
-        </div>
-        <p class="hint">Combine rotas ou foque em uma só: todas levam ao nível 5.</p>
-        <div class="route">
-          <div class="route-label"><span>🔬 Ciência</span><b id="route-science-value">0</b></div>
-          <div class="route-bar"><div id="bar-science" class="route-fill"></div></div>
-        </div>
-        <div class="route">
-          <div class="route-label"><span>⚙️ Indústria</span><b id="route-industry-value">0</b></div>
-          <div class="route-bar"><div id="bar-industry" class="route-fill"></div></div>
-        </div>
-        <div class="route">
-          <div class="route-label"><span>🤝 Diplomacia</span><b id="route-diplomacy-value">0</b></div>
-          <div class="route-bar"><div id="bar-diplomacy" class="route-fill"></div></div>
-        </div>
-        <div class="next-milestone">
-          <span class="milestone-icon">◈</span>
-          <span id="next-milestone">Próximo marco: Base Alfa</span>
-        </div>
-      </section>
-
-      <section class="panel glass log-panel">
-        <div class="panel-heading">
-          <div>
-            <span class="eyebrow">COMUNICAÇÕES</span>
-            <h2>Diário da missão</h2>
-          </div>
-          <span class="live-label">AO VIVO</span>
-        </div>
-        <div id="log" aria-live="polite"></div>
-      </section>
-    </aside>
-
-    <section id="info-panel" class="glass hidden" aria-live="polite">
-      <div class="panel-heading">
-        <div>
-          <span class="eyebrow">DETALHES DO MÓDULO</span>
-          <h2 id="info-name">Módulo</h2>
-        </div>
-        <button class="close-info" type="button" aria-label="Fechar detalhes">×</button>
-      </div>
-      <p id="info-desc"></p>
-      <p id="info-prod"></p>
-      <div id="info-buttons"></div>
+    <section class="resource-strip" aria-label="Recursos da colônia">
+      <div class="resource" data-resource="energy"><span class="resource-icon">ϟ</span><span><small>ENERGIA</small><b id="resource-energy">80</b></span><span class="resource-unit">kW</span></div>
+      <div class="resource" data-resource="oxygen"><span class="resource-icon">◉</span><span><small>OXIGÊNIO</small><b id="resource-oxygen">60</b></span><span class="resource-unit">kg</span></div>
+      <div class="resource" data-resource="water"><span class="resource-icon">◒</span><span><small>ÁGUA</small><b id="resource-water">55</b></span><span class="resource-unit">L</span></div>
+      <div class="resource" data-resource="minerals"><span class="resource-icon">⬡</span><span><small>MINÉRIOS</small><b id="resource-minerals">65</b></span><span class="resource-unit">t</span></div>
+      <div class="resource" data-resource="food"><span class="resource-icon">✿</span><span><small>ALIMENTO</small><b id="resource-food">38</b></span><span class="resource-unit">kg</span></div>
+      <div class="resource" data-resource="science"><span class="resource-icon">⌘</span><span><small>CIÊNCIA</small><b id="resource-science">0</b></span><span class="resource-unit">pts</span></div>
+      <div class="resource" data-resource="credits"><span class="resource-icon">◈</span><span><small>CRÉDITOS</small><b id="resource-credits">35</b></span><span class="resource-unit">₡</span></div>
     </section>
 
-    <footer id="buildbar">
-      <div class="buildbar-heading">
-        <div>
-          <span class="eyebrow">EXPANDA A COLÔNIA</span>
-          <strong>Construção</strong>
+    <aside class="left-column">
+      <section class="card objective-card">
+        <div class="card-kicker">OBJETIVO PRINCIPAL <span class="target-glyph">⌖</span></div>
+        <h1 id="objective-title">Uma casa entre as estrelas</h1>
+        <p id="objective-copy">Construa uma colônia autossuficiente e prepare a viagem para a órbita.</p>
+        <div class="level-row"><span id="level-name">NÍVEL 1 <i>·</i> PRIMEIROS PASSOS</span><b id="level-count">1 / 5</b></div>
+        <div class="level-track"><div id="level-progress"></div></div>
+        <div class="next-level"><span class="next-dot"></span><span id="next-level">Próximo: Base Alfa</span></div>
+      </section>
+
+      <section class="card crew-card">
+        <div class="section-heading"><div><span class="card-kicker">QUEM FAZ A DIFERENÇA</span><h2>Sua tripulação</h2></div><span class="crew-total">03</span></div>
+        <p class="crew-help">Escolha alguém e depois clique em um módulo para designar.</p>
+        <div id="crew-list"></div>
+      </section>
+    </aside>
+
+    <aside class="right-column">
+      <section class="card paths-card">
+        <div class="section-heading"><div><span class="card-kicker">TRÊS JEITOS DE CHEGAR LÁ</span><h2>Rotas da missão</h2></div><span class="route-symbol">↗</span></div>
+        <p class="route-help">Escolha seu caminho. Você pode misturar os três.</p>
+        <div class="path-row"><div class="path-label"><span class="path-icon science">✳</span><span>Pesquisa</span><b id="path-science-value">0</b></div><div class="path-track"><i id="path-science"></i></div></div>
+        <div class="path-row"><div class="path-label"><span class="path-icon industry">⬡</span><span>Indústria</span><b id="path-industry-value">0</b></div><div class="path-track"><i id="path-industry"></i></div></div>
+        <div class="path-row"><div class="path-label"><span class="path-icon community">✧</span><span>Comunidade</span><b id="path-community-value">0</b></div><div class="path-track"><i id="path-community"></i></div></div>
+        <div class="route-note"><span>◎</span><span id="route-note">A primeira etapa é construir.</span></div>
+        <div class="expedition">
+          <div class="expedition-heading"><span>Escolha o foco da expedição</span><small id="expedition-cooldown"></small></div>
+          <div class="expedition-options">
+            <button class="expedition-path selected" data-path="science" type="button" aria-label="Expedição de pesquisa">✳</button>
+            <button class="expedition-path" data-path="industry" type="button" aria-label="Expedição industrial">⬡</button>
+            <button class="expedition-path" data-path="community" type="button" aria-label="Expedição comunitária">✧</button>
+            <button id="expedition-button" type="button">Enviar rover <span>→</span></button>
+          </div>
         </div>
-        <span class="build-help">Clique em um módulo para construir</span>
-      </div>
-      <div id="build-buttons"></div>
-      <p class="controls-hint">Arraste para orbitar <span>·</span> Scroll para aproximar <span>·</span> Clique em um módulo para gerenciá-lo</p>
+      </section>
+
+      <section class="card feed-card">
+        <div class="section-heading"><div><span class="card-kicker">CENTRAL DE CONTROLE</span><h2>Diário da missão</h2></div><span class="live-tag"><i></i> AO VIVO</span></div>
+        <div id="mission-log" aria-live="polite"></div>
+      </section>
+    </aside>
+
+    <div id="placement-hint" class="placement-hint hidden"><span>＋</span> Clique em uma área livre da Lua para construir <kbd>ESC</kbd></div>
+
+    <section id="building-info" class="building-info hidden" aria-live="polite">
+      <div class="info-heading"><div><small id="info-category">MÓDULO</small><h2 id="info-title">Nome do módulo</h2></div><button id="close-info" type="button" aria-label="Fechar">×</button></div>
+      <p id="info-description"></p>
+      <div id="info-stats"></div>
+      <div id="info-actions"></div>
+    </section>
+
+    <footer class="build-dock">
+      <div class="dock-heading"><div><span class="card-kicker">O PRÓXIMO PASSO É SEU</span><h2>Construa a colônia</h2></div><span id="building-count">0 MÓDULOS</span></div>
+      <div id="build-options"></div>
+      <div class="dock-footer"><span><i class="key-circle">1</i> a <i class="key-circle">0</i> selecionar <span class="footer-separator">/</span> <i class="key-circle">ESC</i> cancelar</span><span>CLIQUE NUM MÓDULO PARA VER DETALHES</span></div>
     </footer>
 
-    <section id="overlay" class="hidden" role="dialog" aria-modal="true" aria-labelledby="overlay-title">
-      <div id="overlay-card" class="glass">
-        <div class="overlay-emblem" aria-hidden="true">✦</div>
-        <span class="eyebrow">CENTRAL DE COMANDO</span>
-        <h1 id="overlay-title"></h1>
-        <p id="overlay-text"></p>
-        <button id="overlay-btn" class="primary-button" type="button">Continuar</button>
+    <section id="modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+      <div class="modal-card">
+        <div class="modal-brand"><span class="brand-icon">M</span> MARÉ LUNAR</div>
+        <div class="modal-kicker">DIÁRIO DE BORDO <span>·</span> MISSÃO 01</div>
+        <h2 id="modal-title">Uma casa entre as estrelas.</h2>
+        <p id="modal-copy">A Lua não precisa ser só um destino. Vamos torná-la um lar.</p>
+        <div id="modal-extra"></div>
+        <button id="modal-button" class="start-button" type="button">Começar missão <span>→</span></button>
+        <small class="modal-note">UMA COLÔNIA. TRÊS CAMINHOS. UM FUTURO.</small>
       </div>
     </section>
+
+    <div id="toast" class="toast" role="status"></div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
