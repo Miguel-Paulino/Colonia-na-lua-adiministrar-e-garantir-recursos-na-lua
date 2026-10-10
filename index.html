@@ -1,113 +1,165 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#10151b">
-    <title>Possible One: Crônicas da Lua</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Colônia Lunar: Sobrevivência</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="main.js" defer></script>
 </head>
 <body>
-    <div id="game-container">
-        <div id="start-screen" class="screen">
-            <div class="title-mark" aria-hidden="true">✦</div>
-            <p class="eyebrow">UMA AVENTURA NARRATIVA</p>
-            <h1>POSSIBLE ONE</h1>
-            <h2>Crônicas da Lua</h2>
-            <p class="subtitle">Explore a Lua em 2D, tome decisões e descubra vários destinos possíveis para a colônia antes que a Cratera Shackleton entre em colapso.</p>
-            <button id="start-btn" class="btn">Iniciar aventura <span aria-hidden="true">→</span></button>
-            <p class="start-note">SUAS ESCOLHAS DECIDEM O DESTINO DA COLÔNIA</p>
-        </div>
+  <main class="game">
 
-        <div id="game-screen" class="screen hidden">
-            <header class="game-header">
-                <a class="wordmark" href="#" aria-label="Possible One">P<span>·</span>O</a>
-                <p class="location"><span class="status-dot"></span> CRATERA SHACKLETON <span class="location-divider">/</span> LUA</p>
-                <p class="chapter-label">DIÁRIO DE BORDO <span>·</span> 01</p>
-            </header>
+    <header class="topbar">
+      <div>
+        <span class="eyebrow">PROJETO ESPACIAL • 2089</span>
+        <h1>🌑 COLÔNIA LUNAR</h1>
+        <p class="subtitle">Sobreviva. Evolua. Conquiste a Lua.</p>
+      </div>
 
-            <div class="game-layout">
-                <aside class="character-panel" aria-label="Ficha do comandante">
-                    <div class="portrait" aria-hidden="true">
-                        <span class="portrait-glow"></span>
-                        <span class="portrait-figure">♙</span>
-                        <span class="portrait-star">✦</span>
-                    </div>
-                    <p class="eyebrow">COMANDANTE</p>
-                    <h2 class="character-name">Pioneiro lunar</h2>
-                    <p class="character-class">Explorador da fronteira</p>
+      <div class="mission-badge">
+        <span class="status-dot"></span>
+        MISSÃO ATIVA
+      </div>
+    </header>
 
-                    <div class="level-row">
-                        <span>NÍVEL <strong id="player-level">1</strong></span>
-                        <span><strong id="player-xp">0</strong> XP</span>
-                    </div>
-                    <div class="xp-track" role="progressbar" aria-label="Experiência" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
-                        <span id="xp-bar"></span>
-                    </div>
-                    <p id="level-perk" class="level-perk">Próximo nível: decisões especializadas</p>
+    <section class="moon-scene">
+      <div class="stars">✦ · ✧ · ✦ · ✧</div>
+      <div class="earth">🌎</div>
 
-                    <div class="panel-divider"></div>
-                    <p class="section-label">RECURSOS DA COLÔNIA</p>
-                    <div id="resources-bar">
-                        <div class="resource">
-                            <div class="resource-heading"><span>Energia</span><span><span id="res-energy">100</span>%</span></div>
-                            <div class="resource-track"><span id="energy-bar"></span></div>
-                        </div>
-                        <div class="resource">
-                            <div class="resource-heading"><span>Suprimentos</span><span><span id="res-supplies">30</span> dias</span></div>
-                            <div class="resource-track"><span id="supplies-bar"></span></div>
-                        </div>
-                        <div class="resource">
-                            <div class="resource-heading"><span>Influência</span><span><span id="res-corporate">50</span>%</span></div>
-                            <div class="resource-track"><span id="influence-bar"></span></div>
-                        </div>
-                    </div>
+      <div class="moon-surface">
+        <div class="crater crater-one"></div>
+        <div class="crater crater-two"></div>
+      </div>
 
-                    <div class="panel-divider"></div>
-                    <p class="section-label">MISSÃO ATUAL</p>
-                    <p id="quest-title" class="quest-title">Sinal de socorro</p>
-                    <p id="quest-description" class="quest-description">Decida como salvar a colônia da crise de abastecimento.</p>
-                </aside>
+      <div class="base">
+        <div class="solar-panels">▰ ▰ ▰</div>
+        <div class="antenna">╱│╲</div>
+        <div class="habitat">▥</div>
+        <div class="habitat small">▥</div>
+        <div class="rover">▰</div>
+      </div>
 
-                <main class="story-column">
-                    <div class="story-heading">
-                        <p class="eyebrow">CAPÍTULO I <span>·</span> A ÚLTIMA FRONTEIRA</p>
-                        <span class="story-icon" aria-hidden="true">☾</span>
-                    </div>
-                    <section class="exploration-panel" aria-label="Mapa 2D explorável">
-                        <div class="exploration-heading">
-                            <span class="section-label">EXPLORAÇÃO 2D</span>
-                            <span class="exploration-controls">MOVER: WASD / ← ↑ → ↓ <span>·</span> INTERAGIR: E</span>
-                        </div>
-                        <canvas id="world-map" width="720" height="300" tabindex="0" aria-label="Mapa lunar 2D. Use as setas ou WASD para mover o explorador; pressione E perto de um ponto para investigar.">
-                            Seu navegador não suporta o mapa 2D. Continue a aventura pelas escolhas narrativas.
-                        </canvas>
-                        <div class="map-footer">
-                            <p id="map-message" aria-live="polite">Explore o mapa e aproxime-se dos marcadores para investigar.</p>
-                            <div class="map-actions">
-                                <div class="movement-pad" aria-label="Controles de movimento">
-                                    <button type="button" class="move-btn move-up" data-move="up" aria-label="Mover para cima">↑</button>
-                                    <button type="button" class="move-btn move-left" data-move="left" aria-label="Mover para a esquerda">←</button>
-                                    <button type="button" class="move-btn move-down" data-move="down" aria-label="Mover para baixo">↓</button>
-                                    <button type="button" class="move-btn move-right" data-move="right" aria-label="Mover para a direita">→</button>
-                                </div>
-                                <button type="button" id="interact-btn" class="interact-btn">Investigar <span> E </span></button>
-                            </div>
-                        </div>
-                    </section>
-                    <div id="story-panel">
-                        <p id="story-text">Carregando dados da colônia...</p>
-                    </div>
-                    <div class="decision-heading">
-                        <span class="section-label">O QUE VOCÊ VAI FAZER?</span>
-                        <span class="decision-hint">ESCOLHA SEU CAMINHO</span>
-                    </div>
-                    <div id="choices-panel"></div>
-                    <p class="story-footer"><span>✦</span> Cada decisão molda o destino de Possible One.</p>
-                </main>
-            </div>
-        </div>
-    </div>
-    <script src="main.js"></script>
+      <div class="scene-label">SETOR ALPHA-01 // LUA</div>
+    </section>
+
+    <section class="status-line">
+      <div>
+        <span class="muted">DIA DA MISSÃO</span>
+        <strong id="day">01</strong>
+      </div>
+
+      <div>
+        <span class="muted">POPULAÇÃO</span>
+        <strong id="population">10</strong>
+      </div>
+
+      <div>
+        <span class="muted">MORAL</span>
+        <strong id="morale">80%</strong>
+      </div>
+
+      <div>
+        <span class="muted">PONTOS</span>
+        <strong id="score">0</strong>
+      </div>
+    </section>
+
+    <section class="resources">
+      <h2>▸ RECURSOS DA COLÔNIA</h2>
+
+      <div class="resource-grid">
+        <article class="resource-card">
+          <span class="resource-icon">🫧</span>
+          <span class="resource-name">Oxigênio</span>
+          <strong id="oxygen">100</strong>
+          <div class="meter">
+            <div id="oxygen-bar" class="fill oxygen-fill"></div>
+          </div>
+        </article>
+
+        <article class="resource-card">
+          <span class="resource-icon">💧</span>
+          <span class="resource-name">Água</span>
+          <strong id="water">100</strong>
+          <div class="meter">
+            <div id="water-bar" class="fill water-fill"></div>
+          </div>
+        </article>
+
+        <article class="resource-card">
+          <span class="resource-icon">⚡</span>
+          <span class="resource-name">Energia</span>
+          <strong id="energy">100</strong>
+          <div class="meter">
+            <div id="energy-bar" class="fill energy-fill"></div>
+          </div>
+        </article>
+
+        <article class="resource-card">
+          <span class="resource-icon">🥫</span>
+          <span class="resource-name">Alimentos</span>
+          <strong id="food">100</strong>
+          <div class="meter">
+            <div id="food-bar" class="fill food-fill"></div>
+          </div>
+        </article>
+
+        <article class="resource-card">
+          <span class="resource-icon">🔩</span>
+          <span class="resource-name">Materiais</span>
+          <strong id="materials">50</strong>
+          <div class="meter">
+            <div id="materials-bar" class="fill materials-fill"></div>
+          </div>
+        </article>
+      </div>
+
+      <p class="hint">
+        Os recursos são consumidos a cada dia. Planeje antes de escolher!
+      </p>
+    </section>
+
+    <section class="decision-panel">
+      <div class="section-heading">
+        <span class="chapter" id="chapter">CAPÍTULO 01</span>
+        <span class="day-label" id="day-label">DIA 01</span>
+      </div>
+
+      <h2 id="event-title">O início de uma nova era</h2>
+
+      <p id="event-description">
+        Sua equipe acaba de chegar à Lua. Qual será sua primeira decisão?
+      </p>
+
+      <div id="choices" class="choices"></div>
+
+      <div id="feedback" class="feedback" aria-live="polite">
+        Aguardando decisão do comandante...
+      </div>
+
+      <button id="continue-btn" class="continue-btn" hidden>
+        CONTINUAR MISSÃO →
+      </button>
+    </section>
+
+    <section class="log-panel">
+      <h2>▸ DIÁRIO DA MISSÃO</h2>
+
+      <div id="log" class="log" aria-live="polite">
+        <p>Dia 01 — Colônia estabelecida. Aguardando ordens.</p>
+      </div>
+    </section>
+
+    <footer>
+      <span>SIMULAÇÃO LUNAR V1.0</span>
+
+      <button id="restart-btn" class="restart-btn">
+        ↻ Reiniciar jogo
+      </button>
+    </footer>
+
+  </main>
 </body>
 </html>
