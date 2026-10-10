@@ -61,6 +61,15 @@ const meteors = [];
 let earth, beaconTime = 0;
 
 function init() {
+  if (typeof THREE === 'undefined' || !THREE.OrbitControls) {
+    showOverlay(
+      'Conexão 3D indisponível',
+      'Não foi possível carregar o motor 3D. Verifique sua conexão com a internet e tente novamente.',
+      true
+    );
+    return;
+  }
+
   scene = new THREE.Scene();
   scene.background = new THREE.Color(0x020308);
 
@@ -248,7 +257,15 @@ function makeBuildingMesh(type) {
 
 function addBuilding(type, x, z, free = false) {
   const def = BUILD_DEFS[type];
+  if (!def) {
+    addLog('❌ Módulo desconhecido. Escolha uma opção da barra de construção.');
+    return null;
+  }
   if (!free) {
+    if (def.special && state.level < 5) {
+      addLog(`🔒 <b>${def.name}</b> só pode ser construído no nível 5.`);
+      return null;
+    }
     for (const k in def.cost) {
       if (state.res[k] < def.cost[k]) { addLog(`❌ Recursos insuficientes para <b>${def.name}</b>.`); return null; }
     }
@@ -354,7 +371,14 @@ function updateInfoPanel() {
     up.textContent = `⬆️ Melhorar (${cost} ⛏️)`;
     up.disabled = state.res.minerals < cost;
     up.onclick = () => {
-      if (state.res.minerals >= cost) { state.res.minerals -= cost; b.upgrade++; scaleBuilding(b); addLog(`⬆️ <b>${def.name}</b> melhorado para Nv.${b.upgrade}!`); updateInfoPanel(); }
+      if (state.res.minerals >= cost) {
+        state.res.minerals -= cost;
+        b.upgrade++;
+        scaleBuilding(b);
+        addLog(`⬆️ <b>${def.name}</b> melhorado para Nv.${b.upgrade}!`);
+        updateInfoPanel();
+        updateHUD();
+      }
     };
     btns.appendChild(up);
   }
@@ -507,11 +531,20 @@ function updateHUD() {
   const total = state.routes.science + state.routes.industry + state.routes.diplomacy;
   document.getElementById('level-num').textContent = 'NÍVEL ' + state.level;
   document.getElementById('level-name').textContent = LEVELS[state.level - 1].name;
-  document.getElementById('level-fill').style.width = Math.min(100, total / FINAL_NEED * 100) + '%';
+  const progress = Math.min(100, total / FINAL_NEED * 100);
+  document.getElementById('level-fill').style.width = progress + '%';
+  document.getElementById('level-bar').setAttribute('aria-valuenow', Math.floor(progress));
 
   document.getElementById('bar-science').style.width = Math.min(100, state.routes.science / FINAL_NEED * 100) + '%';
   document.getElementById('bar-industry').style.width = Math.min(100, state.routes.industry / FINAL_NEED * 100) + '%';
   document.getElementById('bar-diplomacy').style.width = Math.min(100, state.routes.diplomacy / FINAL_NEED * 100) + '%';
+  document.getElementById('route-science-value').textContent = Math.floor(state.routes.science);
+  document.getElementById('route-industry-value').textContent = Math.floor(state.routes.industry);
+  document.getElementById('route-diplomacy-value').textContent = Math.floor(state.routes.diplomacy);
+  const nextLevel = LEVELS.find(level => level.n === state.level + 1);
+  document.getElementById('next-milestone').textContent = nextLevel
+    ? `Próximo marco: ${nextLevel.name} · ${Math.max(0, nextLevel.need - total)} pontos`
+    : 'Próximo marco: construir o Elevador Orbital';
 
   document.querySelectorAll('.build-btn').forEach(btn => {
     const type = btn.dataset.type;
@@ -592,6 +625,24 @@ function showOverlay(title, html, victory = false) {
   };
   document.getElementById('overlay').classList.remove('hidden');
 }
+
+document.getElementById('help-btn').addEventListener('click', () => {
+  showOverlay(
+    'Como jogar',
+    'Administre os recursos para manter a colônia funcionando.<br><br>' +
+    'Construa painéis para gerar energia, extratores para obter minérios e módulos para produzir água, oxigênio, ciência e créditos. Designe especialistas para melhorar a produção.<br><br>' +
+    'Aumente os pontos de <b>Ciência</b>, <b>Indústria</b> ou <b>Diplomacia</b> — qualquer rota, ou uma combinação delas, leva ao nível 5. Então construa o <b>Elevador Orbital</b> para concluir a missão.<br><br>' +
+    'Arraste a cena para orbitar, use o scroll para aproximar e clique nos módulos para melhorá-los ou repará-los.'
+  );
+});
+
+document.getElementById('restart-btn').addEventListener('click', () => {
+  if (window.confirm('Reiniciar a missão? Todo o progresso atual será perdido.')) {
+    window.location.reload();
+  }
+});
+
+document.querySelector('.close-info').addEventListener('click', () => selectBuilding(null));
 
 /* ----------------- LOOP DE ANIMAÇÃO ----------------- */
 function animate() {
