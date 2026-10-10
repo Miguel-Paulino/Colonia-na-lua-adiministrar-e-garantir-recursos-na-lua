@@ -1,165 +1,214 @@
-
-<!DOCTYPE html>
+html = '''<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Colônia Lunar: Sobrevivência</title>
-  <link rel="stylesheet" href="style.css">
-  <script src="main.js" defer></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Colônia Lunar: Horizonte</title>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <main class="game">
+<div id="game-container"></div>
 
-    <header class="topbar">
-      <div>
-        <span class="eyebrow">PROJETO ESPACIAL • 2089</span>
-        <h1>🌑 COLÔNIA LUNAR</h1>
-        <p class="subtitle">Sobreviva. Evolua. Conquiste a Lua.</p>
-      </div>
+<!-- ===== BARRA SUPERIOR: RECURSOS + NÍVEL ===== -->
+<div id="topbar">
+  <div id="level-chip">
+    <span id="level-num">NÍVEL 1</span>
+    <span id="level-name">Módulo de Pouso</span>
+    <div id="level-bar"><div id="level-fill"></div></div>
+  </div>
+  <div id="resources">
+    <span class="res" title="Energia">⚡ <b id="r-energy">0</b></span>
+    <span class="res" title="Oxigênio">🫧 <b id="r-oxygen">0</b></span>
+    <span class="res" title="Água">💧 <b id="r-water">0</b></span>
+    <span class="res" title="Minérios">⛏️ <b id="r-minerals">0</b></span>
+    <span class="res" title="Ciência">🔬 <b id="r-science">0</b></span>
+    <span class="res" title="Créditos">💰 <b id="r-credits">0</b></span>
+    <span class="res" title="Reputação">🤝 <b id="r-reputation">0</b></span>
+  </div>
+</div>
 
-      <div class="mission-badge">
-        <span class="status-dot"></span>
-        MISSÃO ATIVA
-      </div>
-    </header>
+<!-- ===== PAINEL ESQUERDO: PERSONAGENS ===== -->
+<div id="crew-panel" class="panel">
+  <h3>👨‍🚀 TRIPULAÇÃO</h3>
+  <p class="hint">Selecione um módulo e designe alguém.</p>
+  <div id="crew-list"></div>
+</div>
 
-    <section class="moon-scene">
-      <div class="stars">✦ · ✧ · ✦ · ✧</div>
-      <div class="earth">🌎</div>
+<!-- ===== PAINEL DIREITO: ROTAS + LOG ===== -->
+<div id="right-panel">
+  <div class="panel">
+    <h3>🛰️ ROTAS PARA O TOPO</h3>
+    <p class="hint">Qualquer rota (ou mistura) leva ao último nível!</p>
+    <div class="route"><label>🔬 Ciência</label><div class="route-bar"><div id="bar-science" class="route-fill"></div></div></div>
+    <div class="route"><label>⚙️ Indústria</label><div class="route-bar"><div id="bar-industry" class="route-fill"></div></div></div>
+    <div class="route"><label>🤝 Diplomacia</label><div class="route-bar"><div id="bar-diplomacy" class="route-fill"></div></div></div>
+  </div>
+  <div class="panel">
+    <h3>📡 REGISTRO</h3>
+    <div id="log"></div>
+  </div>
+</div>
 
-      <div class="moon-surface">
-        <div class="crater crater-one"></div>
-        <div class="crater crater-two"></div>
-      </div>
+<!-- ===== BARRA INFERIOR: CONSTRUÇÃO ===== -->
+<div id="buildbar">
+  <div id="build-buttons"></div>
+  <p class="hint">🖱️ Arraste para orbitar • Scroll para zoom • Clique nos módulos para gerenciar</p>
+</div>
 
-      <div class="base">
-        <div class="solar-panels">▰ ▰ ▰</div>
-        <div class="antenna">╱│╲</div>
-        <div class="habitat">▥</div>
-        <div class="habitat small">▥</div>
-        <div class="rover">▰</div>
-      </div>
+<!-- ===== PAINEL DO MÓDULO SELECIONADO ===== -->
+<div id="info-panel" class="hidden">
+  <h3 id="info-name">Módulo</h3>
+  <p id="info-desc"></p>
+  <p id="info-prod"></p>
+  <div id="info-buttons"></div>
+</div>
 
-      <div class="scene-label">SETOR ALPHA-01 // LUA</div>
-    </section>
+<!-- ===== OVERLAY (eventos / nível / vitória) ===== -->
+<div id="overlay" class="hidden">
+  <div id="overlay-card">
+    <h2 id="overlay-title"></h2>
+    <p id="overlay-text"></p>
+    <button id="overlay-btn">Continuar</button>
+  </div>
+</div>
 
-    <section class="status-line">
-      <div>
-        <span class="muted">DIA DA MISSÃO</span>
-        <strong id="day">01</strong>
-      </div>
-
-      <div>
-        <span class="muted">POPULAÇÃO</span>
-        <strong id="population">10</strong>
-      </div>
-
-      <div>
-        <span class="muted">MORAL</span>
-        <strong id="morale">80%</strong>
-      </div>
-
-      <div>
-        <span class="muted">PONTOS</span>
-        <strong id="score">0</strong>
-      </div>
-    </section>
-
-    <section class="resources">
-      <h2>▸ RECURSOS DA COLÔNIA</h2>
-
-      <div class="resource-grid">
-        <article class="resource-card">
-          <span class="resource-icon">🫧</span>
-          <span class="resource-name">Oxigênio</span>
-          <strong id="oxygen">100</strong>
-          <div class="meter">
-            <div id="oxygen-bar" class="fill oxygen-fill"></div>
-          </div>
-        </article>
-
-        <article class="resource-card">
-          <span class="resource-icon">💧</span>
-          <span class="resource-name">Água</span>
-          <strong id="water">100</strong>
-          <div class="meter">
-            <div id="water-bar" class="fill water-fill"></div>
-          </div>
-        </article>
-
-        <article class="resource-card">
-          <span class="resource-icon">⚡</span>
-          <span class="resource-name">Energia</span>
-          <strong id="energy">100</strong>
-          <div class="meter">
-            <div id="energy-bar" class="fill energy-fill"></div>
-          </div>
-        </article>
-
-        <article class="resource-card">
-          <span class="resource-icon">🥫</span>
-          <span class="resource-name">Alimentos</span>
-          <strong id="food">100</strong>
-          <div class="meter">
-            <div id="food-bar" class="fill food-fill"></div>
-          </div>
-        </article>
-
-        <article class="resource-card">
-          <span class="resource-icon">🔩</span>
-          <span class="resource-name">Materiais</span>
-          <strong id="materials">50</strong>
-          <div class="meter">
-            <div id="materials-bar" class="fill materials-fill"></div>
-          </div>
-        </article>
-      </div>
-
-      <p class="hint">
-        Os recursos são consumidos a cada dia. Planeje antes de escolher!
-      </p>
-    </section>
-
-    <section class="decision-panel">
-      <div class="section-heading">
-        <span class="chapter" id="chapter">CAPÍTULO 01</span>
-        <span class="day-label" id="day-label">DIA 01</span>
-      </div>
-
-      <h2 id="event-title">O início de uma nova era</h2>
-
-      <p id="event-description">
-        Sua equipe acaba de chegar à Lua. Qual será sua primeira decisão?
-      </p>
-
-      <div id="choices" class="choices"></div>
-
-      <div id="feedback" class="feedback" aria-live="polite">
-        Aguardando decisão do comandante...
-      </div>
-
-      <button id="continue-btn" class="continue-btn" hidden>
-        CONTINUAR MISSÃO →
-      </button>
-    </section>
-
-    <section class="log-panel">
-      <h2>▸ DIÁRIO DA MISSÃO</h2>
-
-      <div id="log" class="log" aria-live="polite">
-        <p>Dia 01 — Colônia estabelecida. Aguardando ordens.</p>
-      </div>
-    </section>
-
-    <footer>
-      <span>SIMULAÇÃO LUNAR V1.0</span>
-
-      <button id="restart-btn" class="restart-btn">
-        ↻ Reiniciar jogo
-      </button>
-    </footer>
-
-  </main>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+<script src="main.js"></script>
 </body>
 </html>
+'''
+
+css = '''/* ===== COLÔNIA LUNAR: HORIZONTE — style.css ===== */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Segoe UI', 'Roboto', sans-serif;
+  background: #05060a;
+  color: #dfe7ef;
+  overflow: hidden;
+  user-select: none;
+}
+
+#game-container { position: fixed; inset: 0; }
+
+canvas { display: block; }
+
+/* ---------- BARRA SUPERIOR ---------- */
+#topbar {
+  position: fixed; top: 0; left: 0; right: 0;
+  display: flex; justify-content: space-between; align-items: flex-start;
+  padding: 10px 14px; pointer-events: none; z-index: 10;
+}
+#level-chip {
+  background: rgba(10, 16, 30, .85);
+  border: 1px solid #2e4a6b; border-radius: 10px;
+  padding: 8px 14px; min-width: 230px;
+  box-shadow: 0 0 18px rgba(70, 140, 255, .25);
+}
+#level-num { font-weight: 800; color: #7db8ff; letter-spacing: 1px; display: block; }
+#level-name { font-size: .8rem; color: #b9c8d8; }
+#level-bar { height: 6px; background: #14213a; border-radius: 3px; margin-top: 6px; overflow: hidden; }
+#level-fill { height: 100%; width: 0%; background: linear-gradient(90deg, #3a86ff, #7db8ff); transition: width .5s; }
+
+#resources { display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
+.res {
+  background: rgba(10, 16, 30, .85); border: 1px solid #2e4a6b;
+  border-radius: 8px; padding: 6px 10px; font-size: .95rem;
+  box-shadow: 0 0 12px rgba(70, 140, 255, .15);
+}
+.res b { color: #ffd166; }
+.res.flash b { color: #ff5c5c; }
+
+/* ---------- PAINÉIS LATERAIS ---------- */
+.panel {
+  background: rgba(10, 16, 30, .85);
+  border: 1px solid #2e4a6b; border-radius: 12px;
+  padding: 12px; margin-bottom: 10px;
+  box-shadow: 0 0 18px rgba(70, 140, 255, .2);
+  backdrop-filter: blur(4px);
+}
+.panel h3 { font-size: .8rem; letter-spacing: 2px; color: #7db8ff; margin-bottom: 8px; }
+.hint { font-size: .68rem; color: #7a8ba0; margin-bottom: 8px; }
+
+#crew-panel { position: fixed; left: 12px; top: 90px; width: 240px; z-index: 10; }
+#right-panel { position: fixed; right: 12px; top: 90px; width: 250px; z-index: 10; max-height: calc(100vh - 220px); overflow-y: auto; }
+
+.crew-card {
+  background: rgba(20, 30, 52, .8); border: 1px solid #22385c;
+  border-radius: 8px; padding: 8px; margin-bottom: 8px;
+}
+.crew-card .c-name { font-weight: 700; font-size: .85rem; }
+.crew-card .c-role { font-size: .72rem; color: #8fd3ff; }
+.crew-card .c-desc { font-size: .68rem; color: #93a5ba; margin: 4px 0; }
+.crew-card .c-status { font-size: .7rem; color: #ffd166; margin-bottom: 4px; }
+
+button {
+  background: linear-gradient(180deg, #2a5aa8, #1c3f78);
+  color: #eaf3ff; border: 1px solid #4a7fc4; border-radius: 7px;
+  padding: 6px 12px; cursor: pointer; font-size: .78rem; font-weight: 600;
+  transition: all .15s;
+}
+button:hover:not(:disabled) { background: linear-gradient(180deg, #3a72cc, #24509a); box-shadow: 0 0 10px rgba(90, 160, 255, .5); }
+button:disabled { opacity: .35; cursor: not-allowed; }
+
+/* ---------- ROTAS ---------- */
+.route { margin-bottom: 8px; }
+.route label { font-size: .72rem; color: #aabdd2; display: block; margin-bottom: 3px; }
+.route-bar { height: 8px; background: #14213a; border-radius: 4px; overflow: hidden; }
+.route-fill { height: 100%; width: 0%; transition: width .5s; }
+#bar-science { background: linear-gradient(90deg, #2ec4b6, #7ef0e4); }
+#bar-industry { background: linear-gradient(90deg, #ff9f1c, #ffd166); }
+#bar-diplomacy { background: linear-gradient(90deg, #e06cff, #ffb3ff); }
+
+/* ---------- LOG ---------- */
+#log { font-size: .7rem; max-height: 160px; overflow-y: auto; }
+.log-entry { padding: 4px 0; border-bottom: 1px dashed #22385c; color: #a9bdd3; }
+.log-entry b { color: #7db8ff; }
+
+/* ---------- BARRA DE CONSTRUÇÃO ---------- */
+#buildbar { position: fixed; bottom: 0; left: 0; right: 0; text-align: center; padding: 10px; z-index: 10; pointer-events: none; }
+#build-buttons { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; pointer-events: auto; margin-bottom: 6px; }
+.build-btn { display: flex; flex-direction: column; align-items: center; min-width: 92px; padding: 8px 10px; }
+.build-btn .b-icon { font-size: 1.3rem; }
+.build-btn .b-cost { font-size: .62rem; color: #9fb4cc; font-weight: 400; }
+
+/* ---------- PAINEL DE INFO ---------- */
+#info-panel {
+  position: fixed; bottom: 110px; left: 50%; transform: translateX(-50%);
+  background: rgba(10, 16, 30, .92); border: 1px solid #4a7fc4;
+  border-radius: 12px; padding: 14px 18px; z-index: 20;
+  min-width: 300px; box-shadow: 0 0 25px rgba(70, 140, 255, .4);
+}
+#info-panel h3 { color: #7db8ff; margin-bottom: 4px; }
+#info-panel p { font-size: .78rem; color: #b9c8d8; margin-bottom: 6px; }
+#info-buttons { display: flex; gap: 8px; flex-wrap: wrap; }
+
+.hidden { display: none !important; }
+
+/* ---------- OVERLAY ---------- */
+#overlay {
+  position: fixed; inset: 0; background: rgba(3, 5, 10, .75);
+  display: flex; align-items: center; justify-content: center; z-index: 50;
+}
+#overlay-card {
+  background: linear-gradient(160deg, #101a30, #0a1020);
+  border: 1px solid #4a7fc4; border-radius: 16px;
+  padding: 30px 40px; text-align: center; max-width: 480px;
+  box-shadow: 0 0 50px rgba(80, 150, 255, .4);
+  animation: pop .4s ease;
+}
+@keyframes pop { from { transform: scale(.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+#overlay-title { color: #7db8ff; margin-bottom: 10px; font-size: 1.5rem; }
+#overlay-text { color: #c8d6e6; font-size: .9rem; margin-bottom: 18px; line-height: 1.5; }
+
+/* scrollbars */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-thumb { background: #2e4a6b; border-radius: 3px; }
+'''
+
+with open('/mnt/agents/output/index.html', 'w', encoding='utf-8') as f:
+    f.write(html)
+with open('/mnt/agents/output/style.css', 'w', encoding='utf-8') as f:
+    f.write(css)
+print("HTML e CSS salvos.")
