@@ -399,3 +399,6 @@ function renderIntro() {
     ]
   });
 }
+
+$("restart").addEventListener("click", startGame);
+startGame();
