@@ -4,97 +4,132 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#101526">
-  <title>Lunar Gold — Colônia Lunar</title>
+  <meta name="theme-color" content="#090e1c">
+  <title>LUNARIS: Ecos da Lua</title>
   <link rel="stylesheet" href="style.css">
   <script src="main.js" defer></script>
 </head>
 <body>
-  <main class="game-shell">
-    <header class="topbar">
+  <header class="topbar">
+    <div class="brand">
+      <span class="logo">☾</span>
       <div>
-        <div class="eyebrow">LUNAR EXPEDITION SYSTEM</div>
-        <h1>LUNAR <span>GOLD</span></h1>
+        <h1>LUNARIS</h1>
+        <p>ECOS DA LUA · RPG</p>
       </div>
-      <div class="day-box">
-        <small>MISSÃO</small>
-        <strong id="day">DIA 01</strong>
-      </div>
-    </header>
+    </div>
+    <div class="top-info">
+      <span id="day">DIA 01</span>
+      <span id="phase">INICIALIZAÇÃO</span>
+    </div>
+  </header>
 
-    <section class="resource-panel" aria-label="Recursos da colônia">
-      <div class="resource">
-        <span>O₂</span><strong id="oxygen">100</strong>
-        <small>Oxigênio</small>
-      </div>
-      <div class="resource">
-        <span>H₂O</span><strong id="water">100</strong>
-        <small>Água</small>
-      </div>
-      <div class="resource">
-        <span>⚡</span><strong id="energy">100</strong>
-        <small>Energia</small>
-      </div>
-      <div class="resource">
-        <span>▤</span><strong id="food">100</strong>
-        <small>Alimentos</small>
-      </div>
-      <div class="resource">
-        <span>◆</span><strong id="ore">0</strong>
-        <small>Minério</small>
-      </div>
-    </section>
-
-    <section class="game-layout">
-      <div class="screen-panel">
-        <div class="screen-heading">
-          <span>▶ SETOR LUNAR 01</span>
-          <span id="weather">VÁCUO EXTERNO</span>
+  <main class="game-layout">
+    <aside class="sidebar">
+      <section class="panel">
+        <h2>COMANDANTE</h2>
+        <div class="portrait">👨‍🚀</div>
+        <h3 id="hero-name">Alex</h3>
+        <p class="muted">Explorador lunar</p>
+        <div class="stat-line">
+          <span>❤️ Vida</span>
+          <strong id="hp-text">100 / 100</strong>
         </div>
-
-        <canvas id="game" width="640" height="400"
-          aria-label="Mapa lunar. Use as setas ou WASD para mover."></canvas>
-
-        <div class="screen-footer">
-          <span>▲ EXPLORAÇÃO</span>
-          <span id="position">X: 04 / Y: 04</span>
+        <div class="bar"><div id="hp-bar" class="fill hp"></div></div>
+        <div class="stat-line">
+          <span>⚡ Energia</span>
+          <strong id="mp-text">40 / 40</strong>
         </div>
-      </div>
-
-      <aside class="side-panel">
-        <h2>TERMINAL</h2>
-        <div id="status" class="status">SISTEMA OPERACIONAL</div>
-
-        <h3>REGISTRO DA MISSÃO</h3>
-        <div id="log" class="log" aria-live="polite">
-          <p>Dia 01. A missão começa.</p>
-          <p>Explore o terreno e procure gelo e minerais.</p>
+        <div class="bar"><div id="mp-bar" class="fill mp"></div></div>
+        <div class="stat-line">
+          <span>⭐ Experiência</span>
+          <strong id="xp-text">0 XP</strong>
         </div>
+      </section>
 
-        <h3>INFRAESTRUTURA</h3>
-        <button id="buildOxygen">+ Gerador de O₂ <span>12 ◆</span></button>
-        <button id="buildFarm">+ Estufa hidropônica <span>10 ◆</span></button>
-        <button id="buildSolar">+ Painel solar <span>8 ◆</span></button>
+      <section class="panel">
+        <h2>RECURSOS DA COLÔNIA</h2>
+        <div class="resource">
+          <span>🫧 Oxigênio</span><strong id="oxygen">80</strong>
+        </div>
+        <div class="resource">
+          <span>💧 Água</span><strong id="water">70</strong>
+        </div>
+        <div class="resource">
+          <span>🥫 Alimentos</span><strong id="food">70</strong>
+        </div>
+        <div class="resource">
+          <span>🔋 Energia</span><strong id="power">60</strong>
+        </div>
+        <div class="resource">
+          <span>💎 Créditos</span><strong id="credits">50</strong>
+        </div>
+        <p class="muted small">Recursos baixos podem colocar toda a missão em risco.</p>
+      </section>
 
-        <button id="endDay" class="primary">ENCERRAR DIA ▶</button>
-        <button id="restart" class="secondary">REINICIAR MISSÃO</button>
-      </aside>
+      <section class="panel">
+        <h2>COLÔNIA</h2>
+        <div class="resource">
+          <span>👥 Confiança</span><strong id="trust">60</strong>
+        </div>
+        <div class="resource">
+          <span>🔬 Pesquisa</span><strong id="research">0</strong>
+        </div>
+        <div class="resource">
+          <span>🏆 Vitórias</span><strong id="wins">0</strong>
+        </div>
+      </section>
+    </aside>
+
+    <section class="main-column">
+      <section class="scene panel">
+        <div class="scene-heading">
+          <div>
+            <p class="eyebrow" id="scene-label">TRANSMISSÃO RECEBIDA</p>
+            <h2 id="scene-title">Bem-vindo a Lunaris</h2>
+          </div>
+          <span id="scene-icon" class="scene-icon">🌙</span>
+        </div>
+        <div id="scene-art" class="scene-art">
+          <div class="moon"></div>
+          <div class="earth">🌍</div>
+          <div class="base">⌂ ⌂ ⌂</div>
+        </div>
+        <div id="story" class="story" aria-live="polite"></div>
+        <div id="choices" class="choices"></div>
+      </section>
+
+      <section id="battle-panel" class="panel battle hidden">
+        <div class="battle-header">
+          <div>
+            <p class="eyebrow">ENCONTRO HOSTIL</p>
+            <h2 id="enemy-name">Criatura lunar</h2>
+          </div>
+          <span id="enemy-icon" class="enemy-icon">👾</span>
+        </div>
+        <p id="enemy-description" class="muted"></p>
+        <div class="stat-line">
+          <span>❤️ Vida inimiga</span>
+          <strong id="enemy-hp-text">50 / 50</strong>
+        </div>
+        <div class="bar"><div id="enemy-hp-bar" class="fill enemy-hp"></div></div>
+        <div class="battle-log" id="battle-log" aria-live="polite"></div>
+        <h3>Seu turno — escolha uma ação</h3>
+        <div id="battle-actions" class="battle-actions"></div>
+      </section>
+
+      <section class="panel footer-panel">
+        <div>
+          <p class="eyebrow">OBJETIVO ATUAL</p>
+          <p id="objective">Descubra como sobreviver em Lunaris.</p>
+        </div>
+        <button id="restart" class="button secondary">↻ Reiniciar jogo</button>
+      </section>
     </section>
-
-    <section class="help">
-      <div>
-        <strong>CONTROLES</strong>
-        <p>WASD / setas: mover · E: interagir · Espaço: próximo dia</p>
-      </div>
-      <div>
-        <strong>OBJETIVO</strong>
-        <p>Mantenha os recursos positivos e sobreviva por 15 dias.</p>
-      </div>
-    </section>
-
-    <footer class="credits">
-      LUNAR GOLD © 2026 · UMA AVENTURA DE SOBREVIVÊNCIA ESPACIAL
-    </footer>
   </main>
+
+  <footer>
+    <p>LUNARIS © 2089 · Uma nova humanidade começa com suas escolhas.</p>
+  </footer>
 </body>
 </html>
