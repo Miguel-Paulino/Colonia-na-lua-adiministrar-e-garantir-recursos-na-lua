@@ -1,86 +1,17 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
- <meta charset="UTF-8">
- <meta name="viewport" content="width=device-width, initial-scale=1">
- <title>Colônia Selene: sobrevivência na Lua</title>
- <link rel="preconnect" href="https://fonts.googleapis.com">
- <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
- <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;700&display=swap" rel="stylesheet">
- <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Selene: Colônia Lunar</title>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
- <div id="app">
- <header class="topo">
- <h1>🌙 Colônia Selene</h1>
- <div class="status-topo">
- <span class="chip">Dia <strong id="dia">1</strong>/30</span>
- <span class="chip">Ações: <strong id="pa">4</strong></span>
- <span class="chip">🔩 Materiais: <strong id="materiais">0</strong></span>
- </div>
- </header>
- 
- <section id="hud" class="hud" aria-label="Recursos da colônia"></section>
- 
- <main class="palco">
- <div class="area-jogo">
- <div class="moldura">
- <canvas id="game" width="1000" height="460" aria-label="Base lunar em vista lateral"></canvas>
- <div id="toast" class="toast hidden" role="status"></div>
- </div>
- <div class="barra-acoes">
- <p class="dica">Escolha um tripulante, clique em um módulo (ou tecle 1 a 8) e gaste as ações do dia. Tecle N para encerrar o dia.</p>
- <button id="btnDia" class="btn-primario" type="button">🌙 Encerrar o dia</button>
- </div>
- </div>
- 
- <aside class="lateral">
- <section class="painel">
- <h2>Tripulação</h2>
- <div id="equipe" class="equipe"></div>
- </section>
- <section class="painel">
- <h2>Reputação</h2>
- <div id="caminhos" class="caminhos"></div>
- </section>
- <section class="painel">
- <h2>Melhorias</h2>
- <div id="melhorias" class="melhorias"></div>
- </section>
- <section class="painel">
- <h2>Diário de bordo</h2>
- <ul id="log" class="log"></ul>
- </section>
- </aside>
- </main>
- </div>
- 
- <!-- Eventos e decisões -->
- <div id="modal" class="overlay hidden" role="dialog" aria-modal="true" aria-labelledby="mTitulo">
- <div class="cartao">
- <div class="falante">
- <span id="mIcone" class="falante-icone"></span>
- <div class="falante-nome">
- <strong id="mNome"></strong>
- <small id="mPapel"></small>
- </div>
- </div>
- <h2 id="mTitulo"></h2>
- <p id="mTexto"></p>
- <div id="mResumo" class="resumo"></div>
- <div id="mEscolhas" class="escolhas"></div>
- </div>
- </div>
- 
- <!-- Tela inicial e finais -->
- <div id="tela" class="overlay hidden" role="dialog" aria-modal="true" aria-labelledby="tTitulo">
- <div class="cartao grande">
- <h2 id="tTitulo"></h2>
- <div id="tCorpo" class="corpo-tela"></div>
- <button id="tBotao" class="btn-primario" type="button"></button>
- </div>
- </div>
- 
- <script src="main.js"></script>
+<main>
+  <canvas id="c" aria-label="Base lunar"></canvas>
+  <section id="hud" aria-live="polite"></section>
+  <section id="p"></section>
+</main>
+<script src="main.js"></script>
 </body>
 </html>
