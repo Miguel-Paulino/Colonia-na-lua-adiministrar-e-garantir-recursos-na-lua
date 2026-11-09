@@ -60,3 +60,16 @@ dialog::backdrop{background:#000a}
 
 @media (max-width:900px){.jogo{grid-template-columns:1fr}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+
+/* ---- versão 2D ---- */
+.jogo{grid-template-columns:200px minmax(0,1fr) 270px;max-width:1360px}
+.tela{position:relative;background:#000;border:1px solid var(--linha);border-radius:6px;overflow:hidden;align-self:start}
+#cv{display:block;width:100%;height:auto;cursor:crosshair}
+#palco{position:absolute;inset:0;background:#0b0c10ee;border:0;border-radius:0;overflow:auto;padding:1.5rem;min-height:0}
+[hidden]{display:none!important}
+.vel{display:flex;gap:.4rem}
+.vel button{padding:.25rem .7rem;text-align:center}
+.vel .ativo,#loja .ativo{border-color:var(--sodio);background:#3d3426}
+#loja{display:grid;gap:.4rem}
+#loja button{font-size:.85rem;padding:.45rem .6rem}
+@media (max-width:1000px){.jogo{grid-template-columns:1fr}}

@@ -12,13 +12,21 @@
 <body>
   <header class="topo">
     <h1>Lunar Industries <span>Colônia Selene</span></h1>
+    <div class="vel">
+      <button id="vPausa">Pausa</button><button id="v1">1x</button><button id="v2">2x</button>
+    </div>
     <div id="dia" aria-live="polite"></div>
   </header>
 
   <main class="jogo">
     <aside id="recursos" aria-label="Recursos da colônia"></aside>
-    <section id="palco" aria-live="polite"></section>
+    <section class="tela">
+      <canvas id="cv" width="960" height="480" aria-label="Vista lateral da base lunar"></canvas>
+      <div id="palco" aria-live="polite" hidden></div>
+    </section>
     <aside class="lateral">
+      <h2>Construir</h2>
+      <div id="loja"></div>
       <h2>Rotas políticas</h2>
       <div id="rotas"></div>
       <h2>Diário de bordo</h2>
