@@ -1,5 +1,62 @@
-body{margin:0;min-height:100vh;display:grid;place-items:center;background:radial-gradient(circle at 50% 0,#14204a,#070b16 65%);color:#8d9ab5;font:14px "Courier New",monospace}
-main{width:min(96vw,640px)}
-canvas{width:100%;height:auto;display:block;image-rendering:pixelated;border:4px solid #243252;border-radius:6px;background:#000}
-canvas:focus-visible{outline:3px solid #f2c14e}
-.help{text-align:center;margin:10px 0 0}
+:root{
+  --fundo:#1a1c20; --painel:#24272d; --linha:#3a3e46; --texto:#e4e0d4; --suave:#9a9689;
+  --sodio:#f0a43a; --terra:#5aa9e6; --bom:#7bc67e; --ruim:#e2574c;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--fundo);color:var(--texto);font:16px/1.55 "IBM Plex Sans",system-ui,sans-serif;min-height:100vh}
+h1,h2,h3{font-family:"Chakra Petch",system-ui,sans-serif;margin:0}
+.topo{display:flex;justify-content:space-between;align-items:baseline;gap:1rem;padding:1rem 1.5rem;border-bottom:2px solid var(--sodio)}
+.topo h1{font-size:1.4rem}
+.topo h1 span{color:var(--sodio);font-weight:500;margin-left:.5rem}
+#dia{font-family:"Chakra Petch",sans-serif;color:var(--suave)}
+.jogo{display:grid;grid-template-columns:230px minmax(0,1fr) 260px;gap:1.25rem;padding:1.25rem 1.5rem;max-width:1200px;margin:auto}
+aside,#palco{background:var(--painel);border:1px solid var(--linha);border-radius:6px;padding:1rem}
+#palco{min-height:480px}
+h2{font-size:.95rem;color:var(--sodio);margin:0 0 .6rem}
+.lateral h2:not(:first-child){margin-top:1.2rem}
+
+/* recursos */
+.m{position:relative;margin-bottom:.8rem}
+.m span{font-size:.85rem;color:var(--suave)}
+.m b{float:right;font-family:"Chakra Petch",sans-serif}
+.m i{display:block;height:8px;margin-top:3px;background:var(--terra);border-radius:2px;transition:width .5s}
+.m::after{content:"";display:block;height:8px;margin-top:-8px;border-radius:2px;background:#0003}
+.m.low i{background:var(--ruim)}
+.m.low b{color:var(--ruim)}
+.stat{display:flex;justify-content:space-between;border-top:1px solid var(--linha);padding:.4rem 0;font-size:.9rem}
+.stat b{font-family:"Chakra Petch",sans-serif;color:var(--sodio)}
+
+/* palco */
+.cena h2{font-size:1.4rem;color:var(--texto);margin-bottom:.5rem}
+.cena p{max-width:68ch;margin:.4rem 0 1rem}
+.tag{display:inline-block;font-size:.8rem;color:var(--sodio);border:1px solid var(--sodio);padding:0 .5rem;border-radius:3px;margin-bottom:.6rem}
+.grade{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:.6rem}
+button{font:inherit;color:var(--texto);background:#2e323a;border:1px solid var(--linha);border-radius:4px;padding:.65rem .8rem;text-align:left;cursor:pointer;transition:border-color .15s,background .15s}
+button:hover:not(:disabled){border-color:var(--sodio);background:#363b44}
+button:focus-visible{outline:3px solid var(--terra);outline-offset:2px}
+button:disabled{opacity:.4;cursor:not-allowed}
+button small{display:block;color:var(--suave);font-size:.8rem}
+.escolhas{display:grid;gap:.6rem}
+.prim{background:var(--sodio);color:#1a1c20;font-weight:500;border-color:var(--sodio);text-align:center}
+.prim:hover:not(:disabled){background:#ffb957;border-color:#ffb957}
+.sec{margin-top:1rem;width:100%;text-align:center;font-size:.9rem}
+.res{border-left:3px solid var(--sodio);padding:.5rem .9rem;background:#0003;margin:1rem 0}
+.sub{margin-top:1.4rem;font-size:.9rem;color:var(--suave)}
+
+/* lateral */
+.rota{display:flex;justify-content:space-between;font-size:.9rem;padding:.15rem 0}
+.rota b{font-family:"Chakra Petch",sans-serif}
+#log{list-style:none;padding:0;margin:0;font-size:.85rem;color:var(--suave)}
+#log li{padding:.3rem 0;border-top:1px solid var(--linha)}
+
+/* finais */
+.fim-win h2{color:var(--bom)} .fim-bad h2{color:var(--ruim)} .fim-neu h2{color:var(--sodio)}
+dialog{background:var(--painel);color:var(--texto);border:1px solid var(--sodio);border-radius:6px;max-width:520px;width:92%}
+dialog::backdrop{background:#000a}
+.f{padding:.4rem 0;border-top:1px solid var(--linha);font-size:.9rem}
+.f.win b{color:var(--bom)} .f.bad b{color:var(--ruim)} .f.neu b{color:var(--sodio)}
+.f.lock{color:var(--suave)}
+
+@media (max-width:900px){.jogo{grid-template-columns:1fr}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
