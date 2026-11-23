@@ -1,75 +1,289 @@
-:root{
-  --fundo:#1a1c20; --painel:#24272d; --linha:#3a3e46; --texto:#e4e0d4; --suave:#9a9689;
-  --sodio:#f0a43a; --terra:#5aa9e6; --bom:#7bc67e; --ruim:#e2574c;
+:root {
+  --fundo: #10131a;
+  --painel: #181d27;
+  --painel-2: #202633;
+  --linha: #303849;
+  --texto: #f2f0e8;
+  --suave: #a6adba;
+  --destaque: #f0a43a;
+  --bom: #70c69a;
+  --ruim: #e66a63;
+  --terra: #66a8dc;
 }
-*{box-sizing:border-box}
-html,body{margin:0}
-body{background:var(--fundo);color:var(--texto);font:16px/1.55 "IBM Plex Sans",system-ui,sans-serif;min-height:100vh}
-h1,h2,h3{font-family:"Chakra Petch",system-ui,sans-serif;margin:0}
-.topo{display:flex;justify-content:space-between;align-items:baseline;gap:1rem;padding:1rem 1.5rem;border-bottom:2px solid var(--sodio)}
-.topo h1{font-size:1.4rem}
-.topo h1 span{color:var(--sodio);font-weight:500;margin-left:.5rem}
-#dia{font-family:"Chakra Petch",sans-serif;color:var(--suave)}
-.jogo{display:grid;grid-template-columns:230px minmax(0,1fr) 260px;gap:1.25rem;padding:1.25rem 1.5rem;max-width:1200px;margin:auto}
-aside,#palco{background:var(--painel);border:1px solid var(--linha);border-radius:6px;padding:1rem}
-#palco{min-height:480px}
-h2{font-size:.95rem;color:var(--sodio);margin:0 0 .6rem}
-.lateral h2:not(:first-child){margin-top:1.2rem}
 
-/* recursos */
-.m{position:relative;margin-bottom:.8rem}
-.m span{font-size:.85rem;color:var(--suave)}
-.m b{float:right;font-family:"Chakra Petch",sans-serif}
-.m i{display:block;height:8px;margin-top:3px;background:var(--terra);border-radius:2px;transition:width .5s}
-.m::after{content:"";display:block;height:8px;margin-top:-8px;border-radius:2px;background:#0003}
-.m.low i{background:var(--ruim)}
-.m.low b{color:var(--ruim)}
-.stat{display:flex;justify-content:space-between;border-top:1px solid var(--linha);padding:.4rem 0;font-size:.9rem}
-.stat b{font-family:"Chakra Petch",sans-serif;color:var(--sodio)}
+* {
+  box-sizing: border-box;
+}
 
-/* palco */
-.cena h2{font-size:1.4rem;color:var(--texto);margin-bottom:.5rem}
-.cena p{max-width:68ch;margin:.4rem 0 1rem}
-.tag{display:inline-block;font-size:.8rem;color:var(--sodio);border:1px solid var(--sodio);padding:0 .5rem;border-radius:3px;margin-bottom:.6rem}
-.grade{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:.6rem}
-button{font:inherit;color:var(--texto);background:#2e323a;border:1px solid var(--linha);border-radius:4px;padding:.65rem .8rem;text-align:left;cursor:pointer;transition:border-color .15s,background .15s}
-button:hover:not(:disabled){border-color:var(--sodio);background:#363b44}
-button:focus-visible{outline:3px solid var(--terra);outline-offset:2px}
-button:disabled{opacity:.4;cursor:not-allowed}
-button small{display:block;color:var(--suave);font-size:.8rem}
-.escolhas{display:grid;gap:.6rem}
-.prim{background:var(--sodio);color:#1a1c20;font-weight:500;border-color:var(--sodio);text-align:center}
-.prim:hover:not(:disabled){background:#ffb957;border-color:#ffb957}
-.sec{margin-top:1rem;width:100%;text-align:center;font-size:.9rem}
-.res{border-left:3px solid var(--sodio);padding:.5rem .9rem;background:#0003;margin:1rem 0}
-.sub{margin-top:1.4rem;font-size:.9rem;color:var(--suave)}
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+}
 
-/* lateral */
-.rota{display:flex;justify-content:space-between;font-size:.9rem;padding:.15rem 0}
-.rota b{font-family:"Chakra Petch",sans-serif}
-#log{list-style:none;padding:0;margin:0;font-size:.85rem;color:var(--suave)}
-#log li{padding:.3rem 0;border-top:1px solid var(--linha)}
+body {
+  background:
+    radial-gradient(circle at 85% 10%, rgba(86, 119, 173, 0.15), transparent 22rem),
+    linear-gradient(135deg, #0d1016, var(--fundo));
+  color: var(--texto);
+  font-family: "IBM Plex Sans", system-ui, sans-serif;
+}
 
-/* finais */
-.fim-win h2{color:var(--bom)} .fim-bad h2{color:var(--ruim)} .fim-neu h2{color:var(--sodio)}
-dialog{background:var(--painel);color:var(--texto);border:1px solid var(--sodio);border-radius:6px;max-width:520px;width:92%}
-dialog::backdrop{background:#000a}
-.f{padding:.4rem 0;border-top:1px solid var(--linha);font-size:.9rem}
-.f.win b{color:var(--bom)} .f.bad b{color:var(--ruim)} .f.neu b{color:var(--sodio)}
-.f.lock{color:var(--suave)}
+button {
+  font: inherit;
+}
 
-@media (max-width:900px){.jogo{grid-template-columns:1fr}}
-@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+.topo {
+  min-height: 82px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem clamp(1rem, 4vw, 4rem);
+  border-bottom: 1px solid var(--linha);
+  background: rgba(16, 19, 26, 0.92);
+}
 
-/* ---- versão 2D ---- */
-.jogo{grid-template-columns:200px minmax(0,1fr) 270px;max-width:1360px}
-.tela{position:relative;background:#000;border:1px solid var(--linha);border-radius:6px;overflow:hidden;align-self:start}
-#cv{display:block;width:100%;height:auto;cursor:crosshair}
-#palco{position:absolute;inset:0;background:#0b0c10ee;border:0;border-radius:0;overflow:auto;padding:1.5rem;min-height:0}
-[hidden]{display:none!important}
-.vel{display:flex;gap:.4rem}
-.vel button{padding:.25rem .7rem;text-align:center}
-.vel .ativo,#loja .ativo{border-color:var(--sodio);background:#3d3426}
-#loja{display:grid;gap:.4rem}
-#loja button{font-size:.85rem;padding:.45rem .6rem}
-@media (max-width:1000px){.jogo{grid-template-columns:1fr}}
+.marca {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.marca__icone {
+  width: 48px;
+  height: 48px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--destaque);
+  border-radius: 50%;
+  color: var(--destaque);
+  font-family: "Chakra Petch", sans-serif;
+  font-weight: 700;
+}
+
+.marca p,
+.marca strong {
+  display: block;
+  margin: 0;
+  line-height: 1.25;
+}
+
+.marca p {
+  color: var(--suave);
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+}
+
+.marca strong {
+  margin-top: 0.2rem;
+  font-family: "Chakra Petch", sans-serif;
+  font-size: 1.05rem;
+}
+
+.progresso-topo {
+  color: var(--suave);
+  font-family: "Chakra Petch", sans-serif;
+  font-size: 0.9rem;
+}
+
+.app {
+  min-height: calc(100vh - 82px);
+  display: grid;
+  place-items: center;
+  padding: clamp(1.25rem, 4vw, 3.5rem);
+}
+
+.quiz {
+  width: min(760px, 100%);
+}
+
+.cartao {
+  padding: clamp(1.25rem, 4vw, 2.5rem);
+  background: linear-gradient(145deg, var(--painel), #151922);
+  border: 1px solid var(--linha);
+  border-radius: 14px;
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.28);
+}
+
+.etiqueta {
+  display: inline-block;
+  margin-bottom: 1.1rem;
+  padding: 0.25rem 0.6rem;
+  border: 1px solid var(--destaque);
+  border-radius: 999px;
+  color: var(--destaque);
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+h1,
+h2 {
+  margin: 0;
+  font-family: "Chakra Petch", sans-serif;
+  line-height: 1.15;
+}
+
+h1 {
+  font-size: clamp(2rem, 6vw, 3.8rem);
+}
+
+h2 {
+  font-size: clamp(1.45rem, 4vw, 2.25rem);
+}
+
+.cartao p {
+  max-width: 56ch;
+  color: var(--suave);
+  line-height: 1.65;
+}
+
+.barra {
+  height: 7px;
+  margin: 1.4rem 0 1.1rem;
+  overflow: hidden;
+  border-radius: 999px;
+  background: #303643;
+}
+
+.barra span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--terra), var(--destaque));
+  transition: width 240ms ease;
+}
+
+.pergunta {
+  margin-bottom: 1.35rem;
+  font-size: clamp(1.15rem, 3vw, 1.55rem);
+}
+
+.alternativas {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.alternativa,
+.acao {
+  min-height: 58px;
+  border: 1px solid var(--linha);
+  border-radius: 8px;
+  background: var(--painel-2);
+  color: var(--texto);
+  cursor: pointer;
+  transition: 160ms ease;
+}
+
+.alternativa {
+  padding: 0.85rem 1rem;
+  text-align: left;
+  font-size: 1.05rem;
+}
+
+.alternativa:hover,
+.alternativa:focus-visible {
+  border-color: var(--destaque);
+  background: #292f3d;
+  transform: translateY(-1px);
+  outline: none;
+}
+
+.alternativa:disabled {
+  cursor: default;
+  opacity: 0.72;
+}
+
+.alternativa.certa {
+  border-color: var(--bom);
+  background: rgba(112, 198, 154, 0.14);
+  color: #b9edcf;
+  opacity: 1;
+}
+
+.alternativa.errada {
+  border-color: var(--ruim);
+  background: rgba(230, 106, 99, 0.14);
+  color: #ffc1bd;
+  opacity: 1;
+}
+
+.acoes {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1.25rem;
+}
+
+.acao {
+  min-height: 48px;
+  padding: 0.7rem 1.15rem;
+  background: var(--destaque);
+  border-color: var(--destaque);
+  color: #17130d;
+  font-family: "Chakra Petch", sans-serif;
+  font-weight: 700;
+}
+
+.acao:hover,
+.acao:focus-visible {
+  background: #ffc05f;
+  outline: none;
+}
+
+.status {
+  margin-top: 1rem;
+  min-height: 1.5em;
+  color: var(--suave);
+  font-weight: 500;
+}
+
+.resultado-icone {
+  width: 88px;
+  height: 88px;
+  display: grid;
+  place-items: center;
+  margin-bottom: 1.25rem;
+  border-radius: 50%;
+  border: 2px solid currentColor;
+  font-family: "Chakra Petch", sans-serif;
+  font-size: 2.2rem;
+  font-weight: 700;
+}
+
+.resultado-icone.vitoria {
+  color: var(--bom);
+  background: rgba(112, 198, 154, 0.08);
+}
+
+.resultado-icone.derrota {
+  color: var(--ruim);
+  background: rgba(230, 106, 99, 0.08);
+}
+
+@media (max-width: 620px) {
+  .topo {
+    min-height: 70px;
+  }
+
+  .progresso-topo {
+    max-width: 120px;
+    text-align: right;
+  }
+
+  .app {
+    min-height: calc(100vh - 70px);
+  }
+
+  .alternativas {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+  }
+}

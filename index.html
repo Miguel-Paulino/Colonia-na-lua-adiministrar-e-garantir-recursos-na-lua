@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Lunar Industries: Colônia Selene</title>
+  <title>Missão Selene — Quiz</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;700&family=IBM+Plex+Sans:wght@400;500&display=swap" rel="stylesheet">
@@ -11,33 +11,21 @@
 </head>
 <body>
   <header class="topo">
-    <h1>Lunar Industries <span>Colônia Selene</span></h1>
-    <div class="vel">
-      <button id="vPausa">Pausa</button><button id="v1">1x</button><button id="v2">2x</button>
+    <div class="marca">
+      <span class="marca__icone" aria-hidden="true">MS</span>
+      <div>
+        <p>Colônia Selene</p>
+        <strong>Missão matemática</strong>
+      </div>
     </div>
-    <div id="dia" aria-live="polite"></div>
+    <div id="progressoTopo" class="progresso-topo" aria-live="polite"></div>
   </header>
 
-  <main class="jogo">
-    <aside id="recursos" aria-label="Recursos da colônia"></aside>
-    <section class="tela">
-      <canvas id="cv" width="960" height="480" aria-label="Vista lateral da base lunar"></canvas>
-      <div id="palco" aria-live="polite" hidden></div>
+  <main class="app">
+    <section class="quiz" aria-live="polite">
+      <div id="palco"></div>
     </section>
-    <aside class="lateral">
-      <h2>Construir</h2>
-      <div id="loja"></div>
-      <h2>Diário de bordo</h2>
-      <ul id="log"></ul>
-      <button id="btnFinais" class="sec">Finais descobertos</button>
-    </aside>
   </main>
-
-  <dialog id="dlgFinais">
-    <h2>Finais descobertos</h2>
-    <div id="listaFinais"></div>
-    <button id="fecharFinais" class="sec">Fechar</button>
-  </dialog>
 
   <script src="main.js"></script>
 </body>
