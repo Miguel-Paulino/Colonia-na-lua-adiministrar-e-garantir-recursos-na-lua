@@ -1,6 +1,6 @@
 'use strict';
 /* Lunar Industries: Colônia Selene
-   Jogo 2D de construção de base lunar com narrativa ramificada. 25 dias, 4 rotas políticas, 17 finais. */
+   Jogo 2D de construção de base lunar com narrativa ramificada. 25 dias, 4 rotas políticas, 18 finais. */
 
 const $ = s => document.querySelector(s);
 const NOMES = {o2:'oxigênio', en:'energia', agua:'água', comida:'comida', moral:'moral', cred:'créditos', pop:'colonos'};
@@ -25,7 +25,8 @@ const FINAIS = {
   escravos:{k:'bad',t:'Escravos da Helion',x:'O contrato foi assinado sem preparo. A Helion assumiu tudo e os colonos viraram mão de obra presa à empresa.'},
   falha_foguete:{k:'bad',t:'Falha na decolagem',x:'O foguete explodiu na plataforma. Faltou energia ou oxigênio para o lançamento, e o sonho de Marte virou fumaça.'},
   vendida:{k:'bad',t:'Colônia vendida',x:'Você vendeu Selene para a Helion e embolsou os créditos. Eles são seus, mas ninguém mais te olha nos olhos.'},
-  declinio:{k:'bad',t:'Declínio lento',x:'Sem aliados e sem estoque, a colônia definhou mês após mês até a última luz apagar.'}
+  declinio:{k:'bad',t:'Declínio lento',x:'Sem aliados e sem estoque, a colônia definhou mês após mês até a última luz apagar.'},
+  quiz:{k:'bad',t:'Resposta incorreta',x:'Você respondeu errado ao desafio da colônia. A missão terminou imediatamente: uma única resposta errada elimina o jogo.'}
 };
 
 /* ---------- ESTADO ---------- */
@@ -63,29 +64,29 @@ function anota(t) { s.log.unshift(`Dia ${s.dia}: ${t}`); s.log = s.log.slice(0, 
 const op = (t, fx, extra = {}) => ({t, fx, ...extra});
 const HISTORIA = {
   3:{t:'Contato da Terra', x:'A agência ATLAS e a Helion Corp mandam mensagens ao mesmo tempo. Cada uma quer controlar o futuro da colônia e oferece algo em troca.', o:[
-    op('Aceitar a ajuda da ATLAS', {comida:15, agua:10}, {pts:{terra:2}, m:'A ATLAS envia suprimentos e relatórios semanais.'}),
+    op('Aceitar a ajuda da ATLAS', {comida:15, agua:10}, {certa:true, pts:{terra:2}, m:'A ATLAS envia suprimentos e relatórios semanais.'}),
     op('Fechar acordo discreto com a Helion', {cred:30}, {pts:{corp:2}, m:'A Helion adianta créditos e pede preferência no hélio-3.'}),
     op('Recusar os dois: a Lua se vira sozinha', {moral:8}, {pts:{indep:2}, m:'Os colonos comemoram a decisão ousada.'})]},
   7:{t:'Contrato do hélio-3', x:'A Helion quer exclusividade sobre toda a extração de hélio-3 da colônia. A oferta é generosa, mas vem com cláusulas pesadas.', o:[
     op('Assinar o contrato', {cred:40, moral:-5}, {pts:{corp:2}, m:'O dinheiro entra, mas a equipe fica desconfiada.'}),
-    op('Negociar uma parceria', {cred:15}, {pts:{corp:1, terra:1}, m:'Um acordo meio a meio que não agrada totalmente a ninguém.'}),
+    op('Negociar uma parceria', {cred:15}, {certa:true, pts:{corp:1, terra:1}, m:'Um acordo meio a meio que não agrada totalmente a ninguém.'}),
     op('Rejeitar e criar uma cooperativa', {moral:10, cred:-10}, {pts:{indep:1}, m:'Os colonos se sentem donos do próprio trabalho.'})]},
   11:{t:'A cratera brilhante', x:'Os sensores detectam gelo e um cristal desconhecido no fundo da cratera Shackleton. Pode ser a descoberta do século, ou uma armadilha.', o:[
-    op('Expedição completa', {en:-10, comida:-5, cred:10}, {pts:{ciencia:2}, risco:{p:.3, fx:{pop:-2, moral:-8}, m:'Houve um desabamento e dois colonos se perderam.'}, m:'A equipe volta com amostras do cristal.'}),
+    op('Expedição completa', {en:-10, comida:-5, cred:10}, {certa:true, pts:{ciencia:2}, risco:{p:.3, fx:{pop:-2, moral:-8}, m:'Houve um desabamento e dois colonos se perderam.'}, m:'A equipe volta com amostras do cristal.'}),
     op('Enviar um rover robô', {cred:-10}, {pts:{ciencia:1}, m:'O rover traz imagens e uma amostra pequena.'}),
     op('Ignorar a cratera', {moral:3}, {m:'Prudência. Mas a dúvida fica no ar.'})]},
   15:{t:'Tempestade solar', x:'Uma erupção solar atinge a Lua em poucas horas. Radiação alta na superfície.', o:[
-    op('Abrigar todos nos túneis', {en:-12, o2:-8, moral:-3}, {m:'Ninguém se fere, mas o consumo dispara.'}),
+    op('Abrigar todos nos túneis', {en:-12, o2:-8, moral:-3}, {certa:true, m:'Ninguém se fere, mas o consumo dispara.'}),
     op('Manter os painéis ligados', {en:25, o2:-10}, {risco:{p:.5, fx:{pop:-2, moral:-6}, m:'A radiação atingiu uma equipe externa.'}, m:'Os painéis armazenam uma carga enorme de energia.'}),
     op('Pedir orientação à ATLAS', {moral:2}, {req:s=>s.pts.terra >= 2, pts:{terra:1}, m:'A ATLAS manda um protocolo de proteção perfeito.'})]},
   19:{t:'Greve dos mineradores', x:'O cansaço pesa. Os mineradores param o trabalho e exigem melhores condições.', o:[
     op('Aumentar as rações', {comida:-12, moral:15}, {m:'A greve termina com festa e barriga cheia.'}),
     op('Chamar a segurança da Helion', {moral:-15, cred:20}, {req:s=>s.pts.corp >= 2, pts:{corp:1}, m:'A ordem volta à força, mas o clima fica pesado.'}),
-    op('Assembleia democrática', {moral:8, en:-3}, {pts:{indep:1}, m:'Todos votam as regras e se sentem ouvidos.'}),
+    op('Assembleia democrática', {moral:8, en:-3}, {certa:true, pts:{indep:1}, m:'Todos votam as regras e se sentem ouvidos.'}),
     op('Citar o protocolo da ATLAS', {moral:-5}, {pts:{terra:1}, m:'Os mineradores voltam, mas contrariados.'})]},
   22:{t:'O ultimato', x:'A Terra e a Helion cobram uma resposta. A decisão final chegará em três dias. Prepare-se para o caminho que escolheu.', o:[
     op('Reforçar laços com a Terra', {cred:-10}, {pts:{terra:2}, m:'Relatórios e promessas fortalecem a parceria.'}),
-    op('Estocar para a independência', {comida:-5, agua:-5, moral:6}, {pts:{indep:2}, m:'O povo se mobiliza em torno de uma ideia.'}),
+    op('Estocar para a independência', {comida:-5, agua:-5, moral:6}, {certa:true, pts:{indep:2}, m:'O povo se mobiliza em torno de uma ideia.'}),
     op('Construir um foguete de pesquisa', {cred:-15, en:-6}, {req:s=>s.cred >= 15, pts:{ciencia:2}, m:'A oficina vira laboratório dia e noite.'}),
     op('Fechar o contrato final com a Helion', {cred:25, moral:-5}, {pts:{corp:2}, m:'Assinatura em mãos e a Helion sorri.'})]},
   25:{t:'A grande decisão', x:'O dia chegou. A Terra, a Helion e seus próprios colonos esperam sua decisão. O que você escolhe para a Colônia Selene?', o:[
@@ -98,35 +99,35 @@ const HISTORIA = {
 };
 const ALEATORIOS = [
   {t:'Chuva de micrometeoritos', x:'Alertas disparam. Uma saraivada de pedras minúsculas vem em direção ao domo principal.', o:[
-    op('Reforçar o domo', {en:-6, cred:-8}, {m:'O reforço aguenta tudo.'}),
+    op('Reforçar o domo', {en:-6, cred:-8}, {certa:true, m:'O reforço aguenta tudo.'}),
     op('Apostar que não é nada', {}, {risco:{p:.5, fx:{o2:-15, pop:-1}, m:'Um impacto rompeu um módulo.'}, m:'Por sorte, nenhum impacto sério.'})]},
   {t:'Vazamento no reservatório', x:'Um cano trinca no reservatório principal de água.', o:[
-    op('Consertar agora', {cred:-10, en:-3}, {m:'Reparo bem feito.'}),
+    op('Consertar agora', {cred:-10, en:-3}, {certa:true, m:'Reparo bem feito.'}),
     op('Improvisar com fita', {agua:-12}, {m:'Segura, mas perde-se muita água.'})]},
   {t:'Fungo na estufa', x:'Um fungo cobre as folhas da estufa em poucas horas.', o:[
     op('Queimar a plantação', {comida:-15}, {m:'Os danos ficam contidos.'}),
-    op('Tratar com químicos', {cred:-10, agua:-5}, {m:'A maior parte se salva.'})]},
+    op('Tratar com químicos', {cred:-10, agua:-5}, {certa:true, m:'A maior parte se salva.'})]},
   {t:'Turistas milionários', x:'Uma nave de turistas pede para visitar a colônia, com pagamento adiantado.', o:[
-    op('Receber os turistas', {cred:25, moral:-3, comida:-6}, {m:'Dinheiro fácil, nervos à flor da pele.'}),
+    op('Receber os turistas', {cred:25, moral:-3, comida:-6}, {certa:true, m:'Dinheiro fácil, nervos à flor da pele.'}),
     op('Recusar', {moral:3}, {m:'A privacidade da colônia vale mais.'})]},
   {t:'Sinal misterioso', x:'Um sinal de rádio repetitivo vem do lado oculto da Lua.', o:[
-    op('Investigar', {en:-5}, {pts:{ciencia:1}, risco:{p:.3, fx:{moral:-8}, m:'O sinal assustou a equipe.'}, m:'Era uma sonda antiga cheia de dados úteis.'}),
+    op('Investigar', {en:-5}, {certa:true, pts:{ciencia:1}, risco:{p:.3, fx:{moral:-8}, m:'O sinal assustou a equipe.'}, m:'Era uma sonda antiga cheia de dados úteis.'}),
     op('Ignorar', {}, {m:'Melhor não mexer.'})]},
   {t:'Pane no reator', x:'O reator principal começa a oscilar e a temperatura sobe.', o:[
-    op('Reparo completo', {cred:-15, en:10}, {m:'O reator fica melhor do que novo.'}),
+    op('Reparo completo', {cred:-15, en:10}, {certa:true, m:'O reator fica melhor do que novo.'}),
     op('Gambiarra rápida', {en:10}, {risco:{p:.4, fx:{en:-20, pop:-1}, m:'A gambiarra falhou e houve um acidente.'}, m:'Funcionou, por enquanto.'})]},
   {t:'Aniversário na base', x:'Uma colona completa um ano na Lua e a base inteira quer comemorar.', o:[
-    op('Fazer a festa', {moral:12, comida:-6}, {m:'Música, risadas e saudade da Terra.'}),
+    op('Fazer a festa', {moral:12, comida:-6}, {certa:true, m:'Música, risadas e saudade da Terra.'}),
     op('Seguir o trabalho', {cred:8, moral:-4}, {m:'Produtivo, mas ficou um clima estranho.'})]},
   {t:'Nave de refugiados', x:'Uma nave com colonos de outra base pede abrigo. Eles estão sem suprimentos.', o:[
-    op('Acolher todos', {pop:3, comida:-8, agua:-6, moral:4}, {m:'Mais braços, mais bocas. A colônia cresce.'}),
+    op('Acolher todos', {pop:3, comida:-8, agua:-6, moral:4}, {certa:true, m:'Mais braços, mais bocas. A colônia cresce.'}),
     op('Recusar', {moral:-6}, {m:'A decisão pesa na consciência de todos.'})]},
   {t:'Poeira nos filtros', x:'A poeira lunar entope os filtros de ar. O ar fica pesado.', o:[
-    op('Limpar todos os filtros', {en:-4, o2:8}, {m:'Ar limpo de novo.'}),
+    op('Limpar todos os filtros', {en:-4, o2:8}, {certa:true, m:'Ar limpo de novo.'}),
     op('Deixar para depois', {o2:-8}, {m:'O ar piora, e a tosse também.'})]},
   {t:'Suspeita de sabotagem', x:'Peças desaparecem do almoxarifado. Alguém está agindo contra a colônia.', o:[
     op('Investigar os colonos', {moral:-3, cred:-5}, {m:'Nada é provado, mas a tensão sobe.'}),
-    op('Instalar câmeras', {cred:-10, moral:3}, {m:'O culpado aparece e a confiança volta.'})]}
+    op('Instalar câmeras', {cred:-10, moral:3}, {certa:true, m:'O culpado aparece e a confiança volta.'})]}
 ];
 
 /* ---------- JOGO 2D (canvas, vista lateral da base) ---------- */
@@ -192,7 +193,7 @@ function intro() {
   palco(`<div class="cena"><span class="tag">Gestão de base lunar em 2D</span>
     <h2>Lunar Industries: Colônia Selene</h2>
     <p>Construa a base na superfície e nos túneis, controle oxigênio, energia, água, comida e moral por 25 dias e decida o destino da colônia.</p>
-    <p>Escolha um prédio na lista da direita e clique na base para construir. Painéis, geradores de oxigênio e antenas ficam na superfície. Extratores, estufas, minas e laboratórios ficam no subsolo. Eventos aparecem durante o jogo e cada escolha soma pontos em uma das quatro rotas políticas. Existem 4 vitórias, 2 finais neutros e 11 derrotas.</p>
+    <p>Escolha um prédio na lista da direita e clique na base para construir. Painéis, geradores de oxigênio e antenas ficam na superfície. Extratores, estufas, minas e laboratórios ficam no subsolo. Os eventos funcionam como um quiz: leia as opções e escolha a alternativa correta. Responder errado encerra o jogo imediatamente.</p>
     <button class="prim" id="comecar">Iniciar missão</button></div>`);
   $('#comecar').onclick = comeca;
 }
@@ -232,16 +233,18 @@ function aleatorio() {
   return e;
 }
 function mostraEvento(e, hist) {
+  e.quiz = hist ? s.dia !== 25 : true;
   const botoes = e.o.map((o, i) => {
     const ok = !o.req || o.req(s);
     return `<button data-o="${i}" ${ok ? '' : 'disabled'}>${o.t}<small>${ok ? descr(o.fx) : 'Requer mais pontos na rota correspondente'}</small></button>`;
   }).join('');
-  palco(`<div class="cena"><span class="tag">${hist ? 'Evento da história' : 'Evento do dia'}</span>
+  palco(`<div class="cena"><span class="tag">${e.quiz ? 'Quiz — uma resposta errada elimina o jogo' : hist ? 'Evento da história' : 'Evento do dia'}</span>
     <h2>${e.t}</h2><p>${e.x}</p><div class="escolhas">${botoes}</div></div>`);
   $('#palco').querySelectorAll('[data-o]').forEach(b => b.onclick = () => escolhe(e, +b.dataset.o));
 }
 function escolhe(e, i) {
   const o = e.o[i];
+  if (e.quiz && o.certa !== true) return fim('quiz');
   aplicar(o.fx);
   let msg = o.m || '';
   if (o.pts) for (const k in o.pts) s.pts[k] += o.pts[k];
