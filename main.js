@@ -24,6 +24,18 @@ const rotas = {
         pergunta: 'O que representa a bandeira enviada pela missão da Terra?',
         alternativas: ['Um acordo coletivo', 'Uma ameaça direta', 'Um arquivo perdido'],
         correta: 'Um acordo coletivo'
+      },
+      {
+        categoria: 'Emergência',
+        pergunta: 'Um módulo habitacional perde pressão. Qual deve ser a primeira ação?',
+        alternativas: ['Isolar o módulo e verificar a tripulação', 'Abrir todas as comportas', 'Desligar as comunicações'],
+        correta: 'Isolar o módulo e verificar a tripulação'
+      },
+      {
+        categoria: 'Pesquisa',
+        pergunta: 'A ATLAS solicita amostras do solo lunar. Como a equipe deve enviá-las?',
+        alternativas: ['Com identificação e registro científico', 'Sem rótulo para economizar tempo', 'Misturadas aos resíduos da base'],
+        correta: 'Com identificação e registro científico'
       }
     ],
     final: 'A missão ATLAS aprova Selene como nova base científica permanente da humanidade.',
@@ -50,6 +62,18 @@ const rotas = {
         pergunta: 'Qual atitude torna a extração responsável?',
         alternativas: ['Planear o limite de produção', 'Usar toda a reserva imediatamente', 'Cancelar o monitoramento'],
         correta: 'Planear o limite de produção'
+      },
+      {
+        categoria: 'Equipamento',
+        pergunta: 'Uma broca começa a vibrar de forma anormal durante a escavação. O que fazer?',
+        alternativas: ['Interromper a operação e inspecioná-la', 'Aumentar a velocidade', 'Retirar o sensor de segurança'],
+        correta: 'Interromper a operação e inspecioná-la'
+      },
+      {
+        categoria: 'Meio ambiente',
+        pergunta: 'Como a equipe deve evitar contaminar uma área de pesquisa lunar?',
+        alternativas: ['Conter resíduos e limitar o acesso', 'Deixar ferramentas espalhadas', 'Lançar detritos na cratera'],
+        correta: 'Conter resíduos e limitar o acesso'
       }
     ],
     final: 'A rota segura transforma o hélio-3 em energia estável e mantém a colônia próspera.',
@@ -76,6 +100,18 @@ const rotas = {
         pergunta: 'Qual símbolo mais representa a unidade da nova colônia?',
         alternativas: ['Uma bandeira escolhida em votação', 'Um contrato secreto', 'A ausência de regras'],
         correta: 'Uma bandeira escolhida em votação'
+      },
+      {
+        categoria: 'Decisão coletiva',
+        pergunta: 'Como os colonos devem escolher as regras da comunidade?',
+        alternativas: ['Debater e votar em assembleia', 'Deixar uma empresa decidir tudo', 'Impedir a participação dos moradores'],
+        correta: 'Debater e votar em assembleia'
+      },
+      {
+        categoria: 'Cooperação',
+        pergunta: 'Uma equipe pede ajuda para reparar o sistema de água. Qual atitude fortalece a comunidade?',
+        alternativas: ['Organizar ajuda e dividir responsabilidades', 'Esconder as ferramentas', 'Ignorar o pedido'],
+        correta: 'Organizar ajuda e dividir responsabilidades'
       }
     ],
     final: 'Os colonos aprovam a República de Selene e a colônia passa a decidir o próprio destino.',
@@ -86,6 +122,7 @@ const rotas = {
 let rotaAtual = null;
 let indice = 0;
 let travado = false;
+let tentativas = 0;
 
 function atualizarProgresso(texto) {
   $('#progressoTopo').textContent = texto;
@@ -104,6 +141,7 @@ function telaInicial() {
   rotaAtual = null;
   indice = 0;
   travado = false;
+  tentativas = 0;
   atualizarProgresso('3 caminhos disponíveis');
 
   const caminhos = Object.entries(rotas).map(([chave, rota]) => `
@@ -117,8 +155,8 @@ function telaInicial() {
     <article class="cartao">
       <span class="etiqueta">Escolha o destino</span>
       <h1>Missão Selene</h1>
-      <p>Decida o caminho da colônia. Depois, responda às três perguntas desse percurso.</p>
-      <p class="aviso">Cada resposta incorreta elimina a missão.</p>
+      <p>Escolha um dos três caminhos e responda às cinco perguntas do percurso.</p>
+      <p class="aviso">Você tem duas tentativas por pergunta. Errar as duas encerra a missão.</p>
       <div class="caminhos">${caminhos}</div>
     </article>
   `;
@@ -132,11 +170,13 @@ function iniciarRota(chave) {
   rotaAtual = rotas[chave];
   indice = 0;
   travado = false;
+  tentativas = 0;
   mostrarPergunta();
 }
 
 function mostrarPergunta() {
   travado = false;
+  tentativas = 0;
   atualizarProgresso(`${rotaAtual.nome} · desafio ${indice + 1} de ${rotaAtual.perguntas.length}`);
 
   const atual = rotaAtual.perguntas[indice];
@@ -180,12 +220,16 @@ function responder(botao, atual) {
       }
     }, 700);
   } else {
-    travado = true;
+    tentativas++;
     botao.classList.add('errada');
+    botao.disabled = true;
+    if (tentativas === 1) {
+      $('#status').textContent = 'Resposta incorreta. Você ainda tem mais uma tentativa.';
+      return;
+    }
+
+    travado = true;
     document.querySelectorAll('[data-resposta]').forEach((item) => item.disabled = true);
-    document.querySelectorAll('[data-resposta]').forEach((item) => {
-      if (item.dataset.resposta === atual.correta) item.classList.add('certa');
-    });
     telaDerrota(atual);
   }
 }
@@ -198,7 +242,7 @@ function telaDerrota(atual) {
         <div class="resultado-icone derrota" aria-hidden="true">×</div>
         <span class="etiqueta">Missão falhou</span>
         <h2>A decisão terminou o percurso</h2>
-        <p>A resposta correta era <strong>${atual.correta}</strong>. Qualquer erro apaga o progresso da missão.</p>
+        <p>A resposta correta era <strong>${atual.correta}</strong>. As duas tentativas foram usadas e o progresso da missão foi perdido.</p>
         <div class="acoes">
           <button class="acao" id="reiniciar">Escolher outro caminho</button>
         </div>
