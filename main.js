@@ -1,11 +1,10 @@
 'use strict';
 /* Lunar Industries: Colônia Selene
-   Jogo 2D de construção de base lunar com narrativa ramificada. 25 dias, 4 rotas políticas, 18 finais. */
+   Jogo 2D de construção de base lunar com narrativa ramificada. 25 dias, 18 finais. */
 
 const $ = s => document.querySelector(s);
 const NOMES = {o2:'oxigênio', en:'energia', agua:'água', comida:'comida', moral:'moral', cred:'créditos', pop:'colonos'};
 const BARRAS = [['o2','Oxigênio'],['en','Energia'],['agua','Água'],['comida','Comida'],['moral','Moral']];
-const ROTAS = {terra:'Aliança com a Terra', corp:'Helion Corp', indep:'Independência', ciencia:'Ciência / Marte'};
 const ULTIMO_DIA = 25;
 
 /* ---------- FINAIS ---------- */
@@ -33,7 +32,6 @@ const FINAIS = {
 let s;
 const novo = () => ({
   dia:1, o2:70, en:70, agua:70, comida:70, moral:70, cred:60, pop:12,
-  pts:{terra:0,corp:0,indep:0,ciencia:0},
   blds:[], tempo:0, vel:1, log:[], vistos:[]
 });
 const minRec = () => Math.min(s.o2, s.en, s.agua, s.comida);
@@ -64,38 +62,38 @@ function anota(t) { s.log.unshift(`Dia ${s.dia}: ${t}`); s.log = s.log.slice(0, 
 const op = (t, fx, extra = {}) => ({t, fx, ...extra});
 const HISTORIA = {
   3:{t:'Contato da Terra', x:'A agência ATLAS e a Helion Corp mandam mensagens ao mesmo tempo. Cada uma quer controlar o futuro da colônia e oferece algo em troca.', o:[
-    op('Aceitar a ajuda da ATLAS', {comida:15, agua:10}, {certa:true, pts:{terra:2}, m:'A ATLAS envia suprimentos e relatórios semanais.'}),
-    op('Fechar acordo discreto com a Helion', {cred:30}, {pts:{corp:2}, m:'A Helion adianta créditos e pede preferência no hélio-3.'}),
-    op('Recusar os dois: a Lua se vira sozinha', {moral:8}, {pts:{indep:2}, m:'Os colonos comemoram a decisão ousada.'})]},
+    op('Aceitar a ajuda da ATLAS', {comida:15, agua:10}, {certa:true, m:'A ATLAS envia suprimentos e relatórios semanais.'}),
+    op('Fechar acordo discreto com a Helion', {cred:30}, {m:'A Helion adianta créditos e pede preferência no hélio-3.'}),
+    op('Recusar os dois: a Lua se vira sozinha', {moral:8}, {m:'Os colonos comemoram a decisão ousada.'})]},
   7:{t:'Contrato do hélio-3', x:'A Helion quer exclusividade sobre toda a extração de hélio-3 da colônia. A oferta é generosa, mas vem com cláusulas pesadas.', o:[
-    op('Assinar o contrato', {cred:40, moral:-5}, {pts:{corp:2}, m:'O dinheiro entra, mas a equipe fica desconfiada.'}),
-    op('Negociar uma parceria', {cred:15}, {certa:true, pts:{corp:1, terra:1}, m:'Um acordo meio a meio que não agrada totalmente a ninguém.'}),
-    op('Rejeitar e criar uma cooperativa', {moral:10, cred:-10}, {pts:{indep:1}, m:'Os colonos se sentem donos do próprio trabalho.'})]},
+    op('Assinar o contrato', {cred:40, moral:-5}, {m:'O dinheiro entra, mas a equipe fica desconfiada.'}),
+    op('Negociar uma parceria', {cred:15}, {certa:true, m:'Um acordo meio a meio que não agrada totalmente a ninguém.'}),
+    op('Rejeitar e criar uma cooperativa', {moral:10, cred:-10}, {m:'Os colonos se sentem donos do próprio trabalho.'})]},
   11:{t:'A cratera brilhante', x:'Os sensores detectam gelo e um cristal desconhecido no fundo da cratera Shackleton. Pode ser a descoberta do século, ou uma armadilha.', o:[
-    op('Expedição completa', {en:-10, comida:-5, cred:10}, {certa:true, pts:{ciencia:2}, risco:{p:.3, fx:{pop:-2, moral:-8}, m:'Houve um desabamento e dois colonos se perderam.'}, m:'A equipe volta com amostras do cristal.'}),
-    op('Enviar um rover robô', {cred:-10}, {pts:{ciencia:1}, m:'O rover traz imagens e uma amostra pequena.'}),
+    op('Expedição completa', {en:-10, comida:-5, cred:10}, {certa:true, risco:{p:.3, fx:{pop:-2, moral:-8}, m:'Houve um desabamento e dois colonos se perderam.'}, m:'A equipe volta com amostras do cristal.'}),
+    op('Enviar um rover robô', {cred:-10}, {m:'O rover traz imagens e uma amostra pequena.'}),
     op('Ignorar a cratera', {moral:3}, {m:'Prudência. Mas a dúvida fica no ar.'})]},
   15:{t:'Tempestade solar', x:'Uma erupção solar atinge a Lua em poucas horas. Radiação alta na superfície.', o:[
     op('Abrigar todos nos túneis', {en:-12, o2:-8, moral:-3}, {certa:true, m:'Ninguém se fere, mas o consumo dispara.'}),
     op('Manter os painéis ligados', {en:25, o2:-10}, {risco:{p:.5, fx:{pop:-2, moral:-6}, m:'A radiação atingiu uma equipe externa.'}, m:'Os painéis armazenam uma carga enorme de energia.'}),
-    op('Pedir orientação à ATLAS', {moral:2}, {req:s=>s.pts.terra >= 2, pts:{terra:1}, m:'A ATLAS manda um protocolo de proteção perfeito.'})]},
+    op('Pedir orientação à ATLAS', {moral:2}, {m:'A ATLAS manda um protocolo de proteção perfeito.'})]},
   19:{t:'Greve dos mineradores', x:'O cansaço pesa. Os mineradores param o trabalho e exigem melhores condições.', o:[
     op('Aumentar as rações', {comida:-12, moral:15}, {m:'A greve termina com festa e barriga cheia.'}),
-    op('Chamar a segurança da Helion', {moral:-15, cred:20}, {req:s=>s.pts.corp >= 2, pts:{corp:1}, m:'A ordem volta à força, mas o clima fica pesado.'}),
-    op('Assembleia democrática', {moral:8, en:-3}, {certa:true, pts:{indep:1}, m:'Todos votam as regras e se sentem ouvidos.'}),
-    op('Citar o protocolo da ATLAS', {moral:-5}, {pts:{terra:1}, m:'Os mineradores voltam, mas contrariados.'})]},
+    op('Chamar a segurança da Helion', {moral:-15, cred:20}, {m:'A ordem volta à força, mas o clima fica pesado.'}),
+    op('Assembleia democrática', {moral:8, en:-3}, {certa:true, m:'Todos votam as regras e se sentem ouvidos.'}),
+    op('Citar o protocolo da ATLAS', {moral:-5}, {m:'Os mineradores voltam, mas contrariados.'})]},
   22:{t:'O ultimato', x:'A Terra e a Helion cobram uma resposta. A decisão final chegará em três dias. Prepare-se para o caminho que escolheu.', o:[
-    op('Reforçar laços com a Terra', {cred:-10}, {pts:{terra:2}, m:'Relatórios e promessas fortalecem a parceria.'}),
-    op('Estocar para a independência', {comida:-5, agua:-5, moral:6}, {certa:true, pts:{indep:2}, m:'O povo se mobiliza em torno de uma ideia.'}),
-    op('Construir um foguete de pesquisa', {cred:-15, en:-6}, {req:s=>s.cred >= 15, pts:{ciencia:2}, m:'A oficina vira laboratório dia e noite.'}),
-    op('Fechar o contrato final com a Helion', {cred:25, moral:-5}, {pts:{corp:2}, m:'Assinatura em mãos e a Helion sorri.'})]},
+    op('Reforçar laços com a Terra', {cred:-10}, {certa:true, m:'Relatórios e promessas fortalecem a parceria.'}),
+    op('Estocar para a independência', {comida:-5, agua:-5, moral:6}, {m:'O povo se mobiliza em torno de uma ideia.'}),
+    op('Construir um foguete de pesquisa', {cred:-15, en:-6}, {m:'A oficina vira laboratório dia e noite.'}),
+    op('Fechar o contrato final com a Helion', {cred:25, moral:-5}, {m:'Assinatura em mãos e a Helion sorri.'})]},
   25:{t:'A grande decisão', x:'O dia chegou. A Terra, a Helion e seus próprios colonos esperam sua decisão. O que você escolhe para a Colônia Selene?', o:[
-    op('Declarar independência', {}, {req:s=>s.pts.indep >= 3, fim:s=>minRec() >= 35 && s.moral >= 40 ? 'independencia' : 'motim'}),
-    op('Selar a aliança com a Terra', {}, {req:s=>s.pts.terra >= 3, fim:s=>s.moral >= 35 && minRec() >= 30 ? 'alianca' : 'abandono'}),
-    op('Assinar o império do hélio-3', {}, {req:s=>s.pts.corp >= 3, fim:s=>s.cred >= 60 && s.moral >= 40 ? 'helio' : 'escravos'}),
-    op('Lançar a missão a Marte', {}, {req:s=>s.pts.ciencia >= 3 && s.cred >= 40, fim:s=>s.en >= 40 && s.o2 >= 40 ? 'marte' : 'falha_foguete'}),
-    op('Resistir sem escolher lado', {}, {fim:s=>minRec() >= 50 ? 'sobrevivente' : 'declinio'}),
-    op('Vender a colônia para a Helion', {}, {fim:'vendida'})]}
+    op('Declarar independência', {}, {certa:true, fim:s=>minRec() >= 35 && s.moral >= 40 ? 'independencia' : 'motim'}),
+    op('Selar a aliança com a Terra', {}, {certa:true, fim:s=>s.moral >= 35 && minRec() >= 30 ? 'alianca' : 'abandono'}),
+    op('Assinar o império do hélio-3', {}, {certa:true, fim:s=>s.cred >= 60 && s.moral >= 40 ? 'helio' : 'escravos'}),
+    op('Lançar a missão a Marte', {}, {certa:true, fim:s=>s.cred >= 40 && s.en >= 40 && s.o2 >= 40 ? 'marte' : 'falha_foguete'}),
+    op('Resistir sem escolher lado', {}, {certa:true, fim:s=>minRec() >= 50 ? 'sobrevivente' : 'declinio'}),
+    op('Vender a colônia para a Helion', {}, {certa:true, fim:'vendida'})]}
 };
 const ALEATORIOS = [
   {t:'Chuva de micrometeoritos', x:'Alertas disparam. Uma saraivada de pedras minúsculas vem em direção ao domo principal.', o:[
@@ -111,7 +109,7 @@ const ALEATORIOS = [
     op('Receber os turistas', {cred:25, moral:-3, comida:-6}, {certa:true, m:'Dinheiro fácil, nervos à flor da pele.'}),
     op('Recusar', {moral:3}, {m:'A privacidade da colônia vale mais.'})]},
   {t:'Sinal misterioso', x:'Um sinal de rádio repetitivo vem do lado oculto da Lua.', o:[
-    op('Investigar', {en:-5}, {certa:true, pts:{ciencia:1}, risco:{p:.3, fx:{moral:-8}, m:'O sinal assustou a equipe.'}, m:'Era uma sonda antiga cheia de dados úteis.'}),
+    op('Investigar', {en:-5}, {certa:true, risco:{p:.3, fx:{moral:-8}, m:'O sinal assustou a equipe.'}, m:'Era uma sonda antiga cheia de dados úteis.'}),
     op('Ignorar', {}, {m:'Melhor não mexer.'})]},
   {t:'Pane no reator', x:'O reator principal começa a oscilar e a temperatura sobe.', o:[
     op('Reparo completo', {cred:-15, en:10}, {certa:true, m:'O reator fica melhor do que novo.'}),
@@ -136,12 +134,12 @@ const cv = $('#cv'), g = cv.getContext('2d');
 const TIPOS = {
   solar:{n:'Painel solar', c:20, sup:true, cor:'#3b6fb0', prod:{en:5}},
   eletro:{n:'Gerador de O₂', c:25, sup:true, cor:'#6bc0c9', prod:{o2:5, en:-2}},
-  antena:{n:'Antena da Terra', c:30, sup:true, cor:'#c9c9d1', prod:{en:-1}, pts:['terra', 5]},
+  antena:{n:'Antena da Terra', c:30, sup:true, cor:'#c9c9d1', prod:{en:-1}},
   gelo:{n:'Extrator de gelo', c:25, sub:true, cor:'#8fd0e8', prod:{agua:5, en:-2}},
   estufa:{n:'Estufa', c:25, sub:true, cor:'#5da35f', prod:{comida:5, agua:-1}},
-  mina:{n:'Mina de hélio-3', c:35, sub:true, cor:'#c88a3a', prod:{cred:8, en:-2}, pts:['corp', 6]},
-  lab:{n:'Laboratório', c:40, sub:true, cor:'#9b6fd1', prod:{en:-2, cred:-2}, pts:['ciencia', 3]},
-  hab:{n:'Alojamento', c:20, cor:'#d8c9a0', prod:{moral:2}, pts:['indep', 8]}
+  mina:{n:'Mina de hélio-3', c:35, sub:true, cor:'#c88a3a', prod:{cred:8, en:-2}},
+  lab:{n:'Laboratório', c:40, sub:true, cor:'#9b6fd1', prod:{en:-2, cred:-2}},
+  hab:{n:'Alojamento', c:20, cor:'#d8c9a0', prod:{moral:2}}
 };
 let sel = null, mouse = null, bloq = true, tick = 0, ult = performance.now();
 const estrelas = Array.from({length:90}, () => ({x:Math.random() * W, y:Math.random() * (CHAO - 20), r:Math.random() * 1.6 + .4, f:Math.random() * 6}));
@@ -170,12 +168,11 @@ function desenhaLateral() {
     `<div class="m ${s[k] < 25 ? 'low' : ''}"><span>${n}</span><b>${s[k]}</b><i style="width:${s[k]}%"></i></div>`).join('') +
     `<div class="stat"><span>Créditos</span><b>${s.cred}</b></div><div class="stat"><span>Colonos</span><b>${s.pop}</b></div>
      <div class="stat"><span>Prédios</span><b>${s.blds.length}</b></div>` : '';
-  $('#rotas').innerHTML = s ? Object.keys(ROTAS).map(k => `<div class="rota"><span>${ROTAS[k]}</span><b>${s.pts[k]}</b></div>`).join('') : '';
   $('#log').innerHTML = s ? s.log.map(l => `<li>${l}</li>`).join('') : '';
   $('#loja').innerHTML = Object.keys(TIPOS).map(k => {
     const T = TIPOS[k];
     return `<button data-t="${k}" class="${sel === k ? 'ativo' : ''}" ${s && s.cred >= T.c ? '' : 'disabled'}>${T.n}
-      <small>${T.c} créditos · ${T.sup ? 'superfície' : T.sub ? 'subsolo' : 'qualquer lugar'}<br>${descr(T.prod)} por dia${T.pts ? `, +1 ${ROTAS[T.pts[0]]} a cada ${T.pts[1]} dias` : ''}</small></button>`;
+      <small>${T.c} créditos · ${T.sup ? 'superfície' : T.sub ? 'subsolo' : 'qualquer lugar'}<br>${descr(T.prod)} por dia</small></button>`;
   }).join('');
   $('#loja').querySelectorAll('[data-t]').forEach(b => b.onclick = () => { sel = sel === b.dataset.t ? null : b.dataset.t; desenhaLateral(); });
   ['vPausa', 'v1', 'v2'].forEach((id, i) => $('#' + id).classList.toggle('ativo', !!s && s.vel === i));
@@ -193,7 +190,7 @@ function intro() {
   palco(`<div class="cena"><span class="tag">Gestão de base lunar em 2D</span>
     <h2>Lunar Industries: Colônia Selene</h2>
     <p>Construa a base na superfície e nos túneis, controle oxigênio, energia, água, comida e moral por 25 dias e decida o destino da colônia.</p>
-    <p>Escolha um prédio na lista da direita e clique na base para construir. Painéis, geradores de oxigênio e antenas ficam na superfície. Extratores, estufas, minas e laboratórios ficam no subsolo. Os eventos funcionam como um quiz: leia as opções e escolha a alternativa correta. Responder errado encerra o jogo imediatamente.</p>
+    <p>Escolha um prédio na lista da direita e clique na base para construir. Painéis, geradores de oxigênio e antenas ficam na superfície. Extratores, estufas, minas e laboratórios ficam no subsolo. Os eventos são perguntas de quiz: leia as opções e escolha a alternativa correta. Responder errado encerra o jogo imediatamente.</p>
     <button class="prim" id="comecar">Iniciar missão</button></div>`);
   $('#comecar').onclick = comeca;
 }
@@ -215,7 +212,6 @@ function novoDia() {
   for (const b of s.blds) {
     const T = TIPOS[b.t];
     for (const k in T.prod) d[k] = (d[k] || 0) + T.prod[k];
-    if (T.pts && s.dia % T.pts[1] === 0) s.pts[T.pts[0]]++;
   }
   aplicar(d);
   const m = morte();
@@ -233,10 +229,9 @@ function aleatorio() {
   return e;
 }
 function mostraEvento(e, hist) {
-  e.quiz = hist ? s.dia !== 25 : true;
+  e.quiz = true;
   const botoes = e.o.map((o, i) => {
-    const ok = !o.req || o.req(s);
-    return `<button data-o="${i}" ${ok ? '' : 'disabled'}>${o.t}<small>${ok ? descr(o.fx) : 'Requer mais pontos na rota correspondente'}</small></button>`;
+    return `<button data-o="${i}">${o.t}<small>${descr(o.fx) || 'Sem custos'}</small></button>`;
   }).join('');
   palco(`<div class="cena"><span class="tag">${e.quiz ? 'Quiz — uma resposta errada elimina o jogo' : hist ? 'Evento da história' : 'Evento do dia'}</span>
     <h2>${e.t}</h2><p>${e.x}</p><div class="escolhas">${botoes}</div></div>`);
@@ -247,7 +242,6 @@ function escolhe(e, i) {
   if (e.quiz && o.certa !== true) return fim('quiz');
   aplicar(o.fx);
   let msg = o.m || '';
-  if (o.pts) for (const k in o.pts) s.pts[k] += o.pts[k];
   if (o.risco && Math.random() < o.risco.p) { aplicar(o.risco.fx); msg = `${o.risco.m} (${descr(o.risco.fx)})`; }
   anota(o.t);
   if (o.fim) return fim(typeof o.fim === 'function' ? o.fim(s) : o.fim);
