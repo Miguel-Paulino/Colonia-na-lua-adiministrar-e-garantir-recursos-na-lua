@@ -2,83 +2,94 @@
 
 const $ = (seletor) => document.querySelector(seletor);
 
-const perguntas = [
-  {
-    categoria: 'Suprimentos',
-    pergunta: 'A estação recebeu 7 caixas de água e depois mais 8 caixas. Quantas caixas existem agora?',
-    alternativas: ['14 caixas', '15 caixas', '16 caixas', '17 caixas'],
-    correta: '15 caixas'
+const rotas = {
+  terra: {
+    nome: 'Aliança com a Terra',
+    subtitulo: 'Seguir as ordens da missão ATLAS',
+    perguntas: [
+      {
+        categoria: 'Comunicação',
+        pergunta: 'Qual equipamento deve ser usado para estabelecer contato com a Terra?',
+        alternativas: ['Antena de transmissão', 'Estufa atmosférica', 'Painel do reator'],
+        correta: 'Antena de transmissão'
+      },
+      {
+        categoria: 'Navegação',
+        pergunta: 'Quem deve receber prioridade ao coordenar uma missão de resgate orbital?',
+        alternativas: ['O centro de controle da ATLAS', 'A tripulação turística', 'O fornecedor de suprimentos'],
+        correta: 'O centro de controle da ATLAS'
+      },
+      {
+        categoria: 'Cultura',
+        pergunta: 'O que representa a bandeira enviada pela missão da Terra?',
+        alternativas: ['Um acordo coletivo', 'Uma ameaça direta', 'Um arquivo perdido'],
+        correta: 'Um acordo coletivo'
+      }
+    ],
+    final: 'A missão ATLAS aprova Selene como nova base científica permanente da humanidade.',
+    titulo: 'Parceria Terra-Lua'
   },
-  {
-    categoria: 'Painéis solares',
-    pergunta: 'Se 9 painéis solares geram 6 unidades cada, quantas unidades são geradas no total?',
-    alternativas: ['54 unidades', '56 unidades', '63 unidades', '69 unidades'],
-    correta: '54 unidades'
+  hélio: {
+    nome: 'Expedição do Hélio-3',
+    subtitulo: 'Explorar recursos valiosos no subsolo',
+    perguntas: [
+      {
+        categoria: 'Geologia',
+        pergunta: 'Qual estrutura subterrânea pode concentrar hélio-3 na Lua?',
+        alternativas: ['Cratera com solo lunar antigo', 'Nuvem de poeira solar', 'Reservatório de oxigênio'],
+        correta: 'Cratera com solo lunar antigo'
+      },
+      {
+        categoria: 'Segurança',
+        pergunta: 'Antes de iniciar uma perfuração profunda, o que a equipe deve verificar?',
+        alternativas: ['A estabilidade do túnel', 'A quantidade de turistas', 'A cor dos uniformes'],
+        correta: 'A estabilidade do túnel'
+      },
+      {
+        categoria: 'Extração',
+        pergunta: 'Qual atitude torna a extração responsável?',
+        alternativas: ['Planear o limite de produção', 'Usar toda a reserva imediatamente', 'Cancelar o monitoramento'],
+        correta: 'Planear o limite de produção'
+      }
+    ],
+    final: 'A rota segura transforma o hélio-3 em energia estável e mantém a colônia próspera.',
+    titulo: 'Império do Hélio-3'
   },
-  {
-    categoria: 'Reservatório',
-    pergunta: 'Um reservatório está com 1/2 da capacidade e recebe mais 1/4. Qual fração ficou cheia?',
-    alternativas: ['1/6', '1/3', '2/6', '3/4'],
-    correta: '3/4'
-  },
-  {
-    categoria: 'Energia',
-    pergunta: 'O reator lunar tem 3 módulos, e cada módulo pode armazenar 3 cargas. Quantas cargas cabem no reator?',
-    alternativas: ['6 cargas', '9 cargas', '12 cargas', '27 cargas'],
-    correta: '9 cargas'
-  },
-  {
-    categoria: 'Oxigênio',
-    pergunta: 'A colônia possui 80 unidades de oxigênio. A reserva de emergência precisa de 25%. Quantas unidades serão separadas?',
-    alternativas: ['20 unidades', '25 unidades', '32 unidades', '40 unidades'],
-    correta: '20 unidades'
-  },
-  {
-    categoria: 'Base lunar',
-    pergunta: 'Um módulo quadrado da estação tem 5 metros de lado. Qual é sua área?',
-    alternativas: ['10 m²', '20 m²', '25 m²', '25 m'],
-    correta: '25 m²'
-  },
-  {
-    categoria: 'Distribuição',
-    pergunta: 'A colônia recebeu 144 refeições para dividir igualmente entre 12 colonos. Quantas refeições cada um recebe?',
-    alternativas: ['10 refeições', '12 refeições', '14 refeições', '16 refeições'],
-    correta: '12 refeições'
-  },
-  {
-    categoria: 'Missão',
-    pergunta: 'Para carregar uma nave, somamos 2 unidades de oxigênio a 3 módulos com 4 unidades cada. Qual é o total?',
-    alternativas: ['14 unidades', '20 unidades', '24 unidades', '32 unidades'],
-    correta: '14 unidades'
-  },
-  {
-    categoria: 'Temperatura',
-    pergunta: 'A temperatura externa está em -8 °C. Ela aumenta 15 °C ao entrar no módulo aquecido. Qual será a temperatura?',
-    alternativas: ['-23 °C', '-7 °C', '7 °C', '23 °C'],
-    correta: '7 °C'
-  },
-  {
-    categoria: 'Navegação',
-    pergunta: 'A rota da nave forma um triângulo. Quanto mede a soma dos ângulos internos dessa trajetória?',
-    alternativas: ['90°', '180°', '270°', '360°'],
-    correta: '180°'
-  },
-  {
-    categoria: 'Estufa',
-    pergunta: 'Três estufas produzem juntas 21 caixas de alimento. Quantas caixas produz cada estufa?',
-    alternativas: ['6 caixas', '7 caixas', '8 caixas', '9 caixas'],
-    correta: '7 caixas'
-  },
-  {
-    categoria: 'Comunicação',
-    pergunta: 'A antena identificou 81 sinais iguais em 9 setores. Quantos sinais existem em cada setor?',
-    alternativas: ['8 sinais', '9 sinais', '10 sinais', '18 sinais'],
-    correta: '9 sinais'
+  independência: {
+    nome: 'Independência Lunar',
+    subtitulo: 'Construir uma comunidade livre na Lua',
+    perguntas: [
+      {
+        categoria: 'Governo',
+        pergunta: 'Qual decisão representa melhor uma comunidade independente?',
+        alternativas: ['Criar uma assembleia dos colonos', 'Entregar todas as decisões à Helion', 'Cancelar o registro de cada habitante'],
+        correta: 'Criar uma assembleia dos colonos'
+      },
+      {
+        categoria: 'Convivência',
+        pergunta: 'Diante de uma greve dos trabalhadores, o que o conselho deve fazer primeiro?',
+        alternativas: ['Ouvir as exigências', 'Fechar os dormitórios', 'Ignorar a equipe médica'],
+        correta: 'Ouvir as exigências'
+      },
+      {
+        categoria: 'Futuro',
+        pergunta: 'Qual símbolo mais representa a unidade da nova colônia?',
+        alternativas: ['Uma bandeira escolhida em votação', 'Um contrato secreto', 'A ausência de regras'],
+        correta: 'Uma bandeira escolhida em votação'
+      }
+    ],
+    final: 'Os colonos aprovam a República de Selene e a colônia passa a decidir o próprio destino.',
+    titulo: 'República Lunar'
   }
-];
+};
 
+let rotaAtual = null;
 let indice = 0;
 let travado = false;
+
+function atualizarProgresso(texto) {
+  $('#progressoTopo').textContent = texto;
+}
 
 function embaralhar(lista) {
   const novaLista = [...lista];
@@ -89,39 +100,48 @@ function embaralhar(lista) {
   return novaLista;
 }
 
-function atualizarProgresso() {
-  if (indice >= perguntas.length) {
-    $('#progressoTopo').textContent = 'Missão concluída';
-  } else {
-    $('#progressoTopo').textContent = `Pergunta ${indice + 1} de ${perguntas.length}`;
-  }
-}
-
 function telaInicial() {
+  rotaAtual = null;
   indice = 0;
   travado = false;
-  atualizarProgresso();
+  atualizarProgresso('3 caminhos disponíveis');
+
+  const caminhos = Object.entries(rotas).map(([chave, rota]) => `
+    <button class="caminho" type="button" data-rota="${chave}">
+      <strong>${rota.nome}</strong>
+      <span>${rota.subtitulo}</span>
+    </button>
+  `).join('');
+
   $('#palco').innerHTML = `
     <article class="cartao">
-      <span class="etiqueta">Simulação lunar</span>
+      <span class="etiqueta">Escolha o destino</span>
       <h1>Missão Selene</h1>
-      <p>Você precisa concluir o protocolo matemático da colônia. Responda todas as perguntas corretamente.</p>
-      <p>Uma resposta errada encerra a missão imediatamente.</p>
-      <div class="acoes">
-        <button class="acao" id="iniciar">Iniciar quiz</button>
-      </div>
+      <p>Decida o caminho da colônia. Depois, responda às três perguntas desse percurso.</p>
+      <p class="aviso">Cada resposta incorreta elimina a missão.</p>
+      <div class="caminhos">${caminhos}</div>
     </article>
   `;
-  $('#iniciar').addEventListener('click', mostrarPergunta);
+
+  document.querySelectorAll('[data-rota]').forEach((botao) => {
+    botao.addEventListener('click', () => iniciarRota(botao.dataset.rota));
+  });
+}
+
+function iniciarRota(chave) {
+  rotaAtual = rotas[chave];
+  indice = 0;
+  travado = false;
+  mostrarPergunta();
 }
 
 function mostrarPergunta() {
   travado = false;
-  atualizarProgresso();
+  atualizarProgresso(`${rotaAtual.nome} · desafio ${indice + 1} de ${rotaAtual.perguntas.length}`);
 
-  const atual = perguntas[indice];
+  const atual = rotaAtual.perguntas[indice];
   const alternativas = embaralhar(atual.alternativas);
-  const porcentagem = (indice / perguntas.length) * 100;
+  const porcentagem = (indice / rotaAtual.perguntas.length) * 100;
 
   $('#palco').innerHTML = `
     <article class="cartao">
@@ -149,16 +169,16 @@ function responder(botao, atual) {
     travado = true;
     botao.classList.add('certa');
     document.querySelectorAll('[data-resposta]').forEach((item) => item.disabled = true);
-    $('#status').textContent = 'Resposta correta.';
+    $('#status').textContent = 'Decisão correta. O caminho continua.';
     indice++;
 
     window.setTimeout(() => {
-      if (indice === perguntas.length) {
+      if (indice === rotaAtual.perguntas.length) {
         telaVitoria();
       } else {
         mostrarPergunta();
       }
-    }, 650);
+    }, 700);
   } else {
     travado = true;
     botao.classList.add('errada');
@@ -172,15 +192,15 @@ function responder(botao, atual) {
 
 function telaDerrota(atual) {
   window.setTimeout(() => {
-    $('#progressoTopo').textContent = 'Missão encerrada';
+    atualizarProgresso('Missão encerrada');
     $('#palco').innerHTML = `
       <article class="cartao">
         <div class="resultado-icone derrota" aria-hidden="true">×</div>
         <span class="etiqueta">Missão falhou</span>
-        <h2>Resposta incorreta</h2>
-        <p>A resposta correta era <strong>${atual.correta}</strong>. Você perdeu o jogo.</p>
+        <h2>A decisão terminou o percurso</h2>
+        <p>A resposta correta era <strong>${atual.correta}</strong>. Qualquer erro apaga o progresso da missão.</p>
         <div class="acoes">
-          <button class="acao" id="reiniciar">Tentar novamente</button>
+          <button class="acao" id="reiniciar">Escolher outro caminho</button>
         </div>
       </article>
     `;
@@ -190,15 +210,15 @@ function telaDerrota(atual) {
 
 function telaVitoria() {
   travado = true;
-  atualizarProgresso();
+  atualizarProgresso('Missão concluída');
   $('#palco').innerHTML = `
     <article class="cartao">
       <div class="resultado-icone vitoria" aria-hidden="true">✓</div>
-      <span class="etiqueta">Missão concluída</span>
-      <h2>Colônia Selene salva!</h2>
-      <p>Você acertou todas as perguntas e completou o protocolo matemático da colônia.</p>
+      <span class="etiqueta">${rotaAtual.titulo}</span>
+      <h2>O destino de Selene foi decidido</h2>
+      <p>${rotaAtual.final}</p>
       <div class="acoes">
-        <button class="acao" id="jogarNovamente">Jogar novamente</button>
+        <button class="acao" id="jogarNovamente">Escolher outro caminho</button>
       </div>
     </article>
   `;
