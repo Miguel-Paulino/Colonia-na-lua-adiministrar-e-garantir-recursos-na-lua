@@ -2,31 +2,107 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Dois caminhos para a história</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;700&family=IBM+Plex+Sans:wght@400;500&display=swap" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#090d1c">
+  <title>Colônia Lunar: Sobrevivência</title>
   <link rel="stylesheet" href="style.css">
+  <script src="main.js" defer></script>
 </head>
 <body>
-  <header class="topo">
-    <div class="marca">
-      <span class="marca__icone" aria-hidden="true">IA</span>
-      <div>
-        <p>Matemática II</p>
-        <strong>História interativa</strong>
+  <div class="stars" aria-hidden="true"></div>
+  <main class="game-shell">
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-mark">L</div>
+        <div><span class="eyebrow">PROJETO LUNARIS · 2089</span><strong>COLÔNIA LUNAR</strong></div>
       </div>
-    </div>
-    <div id="progressoTopo" class="progresso-topo" aria-live="polite"></div>
-  </header>
+      <div class="top-status"><span class="live-dot"></span> SISTEMAS ONLINE <span class="divider">|</span> SETOR 01</div>
+    </header>
 
-  <main class="app">
-    <section class="quiz" aria-live="polite">
-      <div id="palco"></div>
+    <section class="screen intro-screen" id="introScreen">
+      <div class="intro-copy">
+        <p class="eyebrow accent">RELATÓRIO DE MISSÃO · TRANSMISSÃO RECEBIDA</p>
+        <h1>O futuro da<br><em>humanidade</em><br>está em suas mãos.</h1>
+        <p class="lead">A primeira colônia permanente da Lua precisa de um comandante. Administre energia, água, oxigênio e alimentos para garantir a sobrevivência de LUNARIS.</p>
+        <div class="mission-tags"><span>✦ AVENTURA 2D</span><span>✦ ESCOLHAS ESTRATÉGICAS</span><span>✦ DOIS CAMINHOS</span></div>
+        <button class="primary-btn" id="startBtn">INICIAR MISSÃO <span>→</span></button>
+        <p class="small-note">Sua missão começa agora, comandante.</p>
+      </div>
+      <div class="moon-scene" aria-label="Ilustração de uma base lunar">
+        <div class="earth"></div><div class="moon"></div>
+        <div class="base base-one"><i></i></div><div class="base base-two"><i></i></div>
+        <div class="solar-panel"></div><div class="solar-panel panel-two"></div>
+        <div class="antenna"></div><div class="rover"></div>
+        <div class="scene-label">LUNARIS // BASE PRINCIPAL</div>
+      </div>
     </section>
-  </main>
 
-  <script src="main.js"></script>
+    <section class="game-screen" id="gameScreen" hidden>
+      <div class="game-heading">
+        <div><p class="eyebrow accent" id="chapterLabel">DIÁRIO DE BORDO · DIA 01</p><h2 id="chapterTitle">Central de comando</h2></div>
+        <div class="commander">COMANDANTE <strong id="commanderName">NOVA</strong></div>
+      </div>
+
+      <section class="resource-panel" aria-label="Indicadores de recursos">
+        <div class="resource"><div class="resource-top"><span>⚡ ENERGIA</span><b id="energyValue">72%</b></div><div class="meter"><i id="energyBar"></i></div></div>
+        <div class="resource"><div class="resource-top"><span>💧 ÁGUA</span><b id="waterValue">64%</b></div><div class="meter"><i id="waterBar"></i></div></div>
+        <div class="resource"><div class="resource-top"><span>◉ OXIGÊNIO</span><b id="oxygenValue">81%</b></div><div class="meter"><i id="oxygenBar"></i></div></div>
+        <div class="resource"><div class="resource-top"><span>▦ ALIMENTOS</span><b id="foodValue">58%</b></div><div class="meter"><i id="foodBar"></i></div></div>
+      </section>
+
+      <div class="play-layout">
+        <aside class="side-panel">
+          <div class="panel-title">MAPA DA BASE <span>● AO VIVO</span></div>
+          <div class="mini-map">
+            <div class="map-grid"></div><div class="map-dome"></div><div class="map-dome dome-small"></div>
+            <div class="map-line"></div><div class="map-pin">⌖</div><span class="map-caption">LUNARIS-01</span>
+          </div>
+          <div class="side-info"><span>LOCALIZAÇÃO</span><strong>POLO SUL LUNAR</strong></div>
+          <div class="side-info"><span>POPULAÇÃO</span><strong>48 COLONOS</strong></div>
+          <div class="side-info"><span>COMUNICAÇÃO</span><strong class="warning-text">INSTÁVEL</strong></div>
+          <div class="log-box"><span class="log-title">ÚLTIMO REGISTRO</span><p id="logText">Comandante, aguardamos suas instruções.</p></div>
+        </aside>
+
+        <section class="story-panel">
+          <div class="story-meta"><span id="pathBadge">PROTOCOLO INICIAL</span><span id="stepCounter">ETAPA 01 / 10</span></div>
+          <div class="story-art" id="storyArt"><span class="art-orbit"></span><span class="art-moon"></span><span class="art-base">▰ ▱ ▰</span><span class="art-scan">LUNARIS // LIVE FEED</span></div>
+          <p class="story-kicker" id="storyKicker">TRANSMISSÃO DA CENTRAL</p>
+          <h3 id="questionText">Você acaba de chegar à colônia LUNARIS...</h3>
+          <p class="story-description" id="storyDescription">Os sistemas de sobrevivência apresentam problemas. Qual será sua primeira atitude?</p>
+          <div class="choices" id="choices"></div>
+          <div class="story-footer"><span>▸ CADA DECISÃO ALTERA O DIÁRIO DE BORDO</span><span>ENTER // ESCOLHER</span></div>
+        </section>
+      </div>
+    </section>
+
+    <section class="result-screen" id="resultScreen" hidden>
+      <div class="result-symbol" id="resultSymbol">✦</div>
+      <p class="eyebrow accent" id="resultEyebrow">RELATÓRIO FINAL</p>
+      <h2 id="resultTitle">THE END</h2>
+      <p class="result-message" id="resultMessage"></p>
+      <div class="final-resources" id="finalResources"></div>
+      <div class="history-box"><h3>DIÁRIO DE BORDO</h3><ol id="historyList"></ol></div>
+      <button class="primary-btn" id="creditsBtn" hidden>VER CRÉDITOS <span>→</span></button>
+      <button class="primary-btn danger-btn" id="restartBtn" hidden>RECOMEÇAR DO INÍCIO <span>↻</span></button>
+    </section>
+
+    <section class="credits-screen" id="creditsScreen" hidden>
+      <p class="eyebrow accent">MISSÃO REGISTRADA · LUNARIS 2089</p>
+      <h2>Créditos</h2>
+      <p class="credits-quote">“Um pequeno passo pode garantir o futuro de toda uma civilização.”</p>
+      <div class="credits-grid">
+        <div><span>JOGO</span><strong>Colônia Lunar: Sobrevivência</strong></div>
+        <div><span>ROTEIRO E PROGRAMAÇÃO</span><strong>[Nomes dos integrantes]</strong></div>
+        <div><span>TURMA</span><strong>[Série e turma]</strong></div>
+        <div><span>ESCOLA</span><strong>[Nome da escola]</strong></div>
+        <div><span>DISCIPLINA</span><strong>Matemática II — Programação</strong></div>
+        <div><span>PROFESSOR</span><strong>Fábio Cesar Bimbati</strong></div>
+        <div><span>REFERÊNCIAS</span><strong>Materiais das Partes 1 a 7 e recursos visuais autorais em CSS.</strong></div>
+      </div>
+      <button class="primary-btn" id="homeBtn">VOLTAR À TELA INICIAL <span>↶</span></button>
+    </section>
+
+    <footer class="footer"><span>© LUNARIS SPACE PROGRAM</span><span>MADE FOR THE NEXT FRONTIER <b>✦</b></span></footer>
+  </main>
 </body>
 </html>
